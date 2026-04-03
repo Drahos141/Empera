@@ -28,14 +28,20 @@
         </div>
       </div>
       <div id="topControls">
-        <button id="helpBtn" onclick="toggleHelp()">❓ Help</button>
+        <button class="hud-btn" onclick="saveGame()" title="Save Game">💾 Save</button>
+        <button class="hud-btn" onclick="loadGame()" title="Load Game">📂 Load</button>
+        <button class="hud-btn" onclick="toggleHelp()" title="Help">❓ Help</button>
+        <button class="hud-btn" onclick="backToMenu()" title="Main Menu">🏠 Menu</button>
       </div>
     </div>
 
     <!-- Bottom Panel -->
     <div id="bottomPanel">
       <div id="selectionPanel">
-        <div class="no-selection">Select units or buildings<br><small>Left-click to select · Drag to box-select</small></div>
+        <canvas id="portraitCanvas" width="60" height="60"></canvas>
+        <div id="selectionInfo">
+          <div class="no-selection">Select units or buildings<br><small>Left-click to select · Drag to box-select</small></div>
+        </div>
       </div>
       <div id="actionPanel">
         <div id="actionButtons"></div>
@@ -60,6 +66,7 @@
               <li><b>Arrow keys</b> – scroll map</li>
               <li><b>Mouse edge</b> – auto-scroll map</li>
               <li><b>A</b> – select all visible units</li>
+              <li><b>H</b> – center on Main Hall</li>
               <li><b>Esc</b> – deselect / cancel build</li>
             </ul>
           </div>
@@ -79,14 +86,153 @@
               <li>Send workers to a construction site to build it</li>
               <li><b>Farm</b> – +5 population cap</li>
               <li><b>Barracks</b> – train soldiers &amp; archers</li>
+              <li><b>Blacksmith</b> – train knights</li>
+              <li><b>Mage Tower</b> – train mages</li>
               <li><b>Watch Tower</b> – defensive structure</li>
-              <li><b>Lumber Mill</b> – wood processing</li>
             </ul>
           </div>
         </div>
-        <button onclick="toggleHelp()">▶ Start Playing</button>
+        <button onclick="toggleHelp()">▶ Continue Playing</button>
       </div>
     </div>
+
+    <!-- Main Menu Overlay -->
+    <div id="mainMenu">
+      <div id="menuContent">
+        <div class="menu-title">⚔️ EMPERA</div>
+        <div class="menu-subtitle">Real Time Strategy</div>
+
+        <!-- Main buttons -->
+        <div id="menuMain" class="menu-section">
+          <button class="menu-btn" onclick="showMenuSection('skirmish')">⚔️ Play Skirmish</button>
+          <button class="menu-btn" onclick="showMenuSection('campaign')">📜 Campaign</button>
+          <button class="menu-btn" onclick="showMenuSection('options')">⚙️ Options</button>
+          <button class="menu-btn" onclick="showMenuSection('credits')">📖 Credits</button>
+          <button class="menu-btn menu-btn-exit" onclick="showMenuSection('exitConfirm')">🚪 Exit</button>
+        </div>
+
+        <!-- Skirmish config -->
+        <div id="menuSkirmish" class="menu-section hidden">
+          <h2 class="menu-section-title">⚔️ Play Skirmish</h2>
+          <div class="menu-option-row">
+            <label>Map Size:</label>
+            <div class="menu-radio-group">
+              <label><input type="radio" name="mapSize" value="small"> Small (40×30)</label>
+              <label><input type="radio" name="mapSize" value="medium" checked> Medium (80×60)</label>
+              <label><input type="radio" name="mapSize" value="large"> Large (120×90)</label>
+            </div>
+          </div>
+          <div class="menu-option-row">
+            <label>AI Players:</label>
+            <div class="menu-radio-group">
+              <label><input type="radio" name="aiPlayers" value="1" checked> 1</label>
+              <label><input type="radio" name="aiPlayers" value="2"> 2</label>
+              <label><input type="radio" name="aiPlayers" value="3"> 3</label>
+              <label><input type="radio" name="aiPlayers" value="4"> 4</label>
+            </div>
+          </div>
+          <div class="menu-option-row">
+            <label>Map Theme:</label>
+            <div class="menu-radio-group">
+              <label><input type="radio" name="mapTheme" value="meadows" checked> Meadows</label>
+              <label><input type="radio" name="mapTheme" value="forest"> Forest</label>
+              <label><input type="radio" name="mapTheme" value="islands"> Islands</label>
+              <label><input type="radio" name="mapTheme" value="random"> Random</label>
+            </div>
+          </div>
+          <div class="menu-btn-row">
+            <button class="menu-btn menu-btn-start" onclick="startGameFromMenu()">▶ START GAME</button>
+            <button class="menu-btn menu-btn-back" onclick="showMenuMain()">← Back</button>
+          </div>
+        </div>
+
+        <!-- Campaign -->
+        <div id="menuCampaign" class="menu-section hidden">
+          <h2 class="menu-section-title">📜 Campaign</h2>
+          <div class="menu-coming-soon">
+            <div style="font-size:40px;margin-bottom:12px">🏰</div>
+            <p style="font-size:18px;color:#c8a050">The Chronicles of Empera</p>
+            <p style="color:#7a7a9a;margin-top:16px;font-size:14px">Coming Soon…</p>
+            <p style="font-size:11px;color:#5a5a7a;margin-top:8px">The campaign mode is currently in development.<br>Stay tuned for future updates!</p>
+          </div>
+          <button class="menu-btn menu-btn-back" onclick="showMenuMain()">← Back</button>
+        </div>
+
+        <!-- Options -->
+        <div id="menuOptions" class="menu-section hidden">
+          <h2 class="menu-section-title">⚙️ Options</h2>
+          <div class="menu-option-row">
+            <label>Music Volume:</label>
+            <input type="range" id="optMusicVolume" min="0" max="100" value="50"
+              oninput="musicVolume=parseInt(this.value);document.getElementById('musicVolumeVal').textContent=this.value">
+            <span id="musicVolumeVal" style="min-width:28px;text-align:right">50</span>
+          </div>
+          <div class="menu-option-row">
+            <label>Sound Effects:</label>
+            <input type="checkbox" id="optSoundEnabled" checked onchange="soundEnabled=this.checked">
+            <span style="color:#8080a0;font-size:12px;margin-left:4px">On/Off</span>
+          </div>
+          <div class="menu-option-row">
+            <label>Show Grid:</label>
+            <input type="checkbox" id="optShowGrid" onchange="showGrid=this.checked;saveOptions()">
+            <span style="color:#8080a0;font-size:12px;margin-left:4px">On/Off</span>
+          </div>
+          <button class="menu-btn menu-btn-back" onclick="showMenuMain();saveOptions()">← Save &amp; Back</button>
+        </div>
+
+        <!-- Credits -->
+        <div id="menuCredits" class="menu-section hidden">
+          <h2 class="menu-section-title">📖 Credits</h2>
+          <div class="menu-credits">
+            <p><b style="color:#e8c84a">Developed by Drahos &amp; Team</b></p>
+            <br>
+            <p>🎮 Game Design &amp; Direction: <b>Drahos</b></p>
+            <p>💻 Programming: <b>Drahos, Alex, Maya</b></p>
+            <p>🎨 Art &amp; Visual Design: <b>Drahos, Sam</b></p>
+            <p>🎵 Sound Design: <b>Jordan</b></p>
+            <p>🗺️ Level Design: <b>Drahos, Chris</b></p>
+            <br>
+            <p style="color:#4a6a9a">Version 1.0</p>
+            <p style="color:#3a3a5a;font-size:10px;margin-top:6px">© 2024 Empera Team. All rights reserved.</p>
+          </div>
+          <button class="menu-btn menu-btn-back" onclick="showMenuMain()">← Back</button>
+        </div>
+
+        <!-- Exit confirm -->
+        <div id="menuExitConfirm" class="menu-section hidden">
+          <h2 class="menu-section-title">🚪 Exit Game</h2>
+          <div class="menu-coming-soon" style="padding:20px">
+            <p style="color:#a0a0c0;font-size:14px">Close the browser tab to exit the game.</p>
+          </div>
+          <div class="menu-btn-row">
+            <button class="menu-btn menu-btn-back" onclick="showMenuMain()">← Back</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Victory Overlay -->
+    <div id="victoryOverlay" class="end-overlay hidden">
+      <div class="victory-title">⚔️ VICTORY! ⚔️</div>
+      <div class="end-subtitle">The enemy has been defeated!</div>
+      <div class="end-score" id="victoryScore"></div>
+      <div style="display:flex;gap:16px;margin-top:32px">
+        <button class="end-btn" onclick="backToMenu()">🏠 Main Menu</button>
+        <button class="end-btn end-btn-play" onclick="restartGame()">▶ Play Again</button>
+      </div>
+    </div>
+
+    <!-- Defeat Overlay -->
+    <div id="defeatOverlay" class="end-overlay hidden">
+      <div class="defeat-title">💀 DEFEAT 💀</div>
+      <div class="end-subtitle">Your empire has fallen…</div>
+      <div style="display:flex;gap:16px;margin-top:32px">
+        <button class="end-btn" onclick="backToMenu()">🏠 Main Menu</button>
+        <button class="end-btn end-btn-play" onclick="restartGame()">▶ Try Again</button>
+      </div>
+    </div>
+
   </div>
 
   <script src="game.js"></script>

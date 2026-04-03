@@ -52,6 +52,12 @@
       </div>
     </div>
 
+    <!-- Right-side Build Panel (appears when worker selected) -->
+    <div id="buildPanel" class="hidden">
+      <div id="buildPanelTitle">🔨 BUILD</div>
+      <div id="buildPanelButtons"></div>
+    </div>
+
     <!-- Help overlay -->
     <div id="helpOverlay" class="hidden">
       <div id="helpContent">
@@ -65,8 +71,9 @@
               <li><b>Right-click</b> – move / gather / attack</li>
               <li><b>Arrow keys</b> – scroll map</li>
               <li><b>Mouse edge</b> – auto-scroll map</li>
-              <li><b>A</b> – select all visible units</li>
+              <li><b>A</b> – select all visible player units</li>
               <li><b>H</b> – center on Main Hall</li>
+              <li><b>P</b> – set patrol (press twice: A→B)</li>
               <li><b>Esc</b> – deselect / cancel build</li>
             </ul>
           </div>
@@ -81,14 +88,18 @@
           <div class="help-col">
             <h3>Buildings</h3>
             <ul>
-              <li>Select a <b>worker</b> → Build menu appears</li>
+              <li>Select a <b>worker</b> → Build panel appears on right</li>
               <li>Click a building button, then click on the map to place</li>
               <li>Send workers to a construction site to build it</li>
               <li><b>Farm</b> – +5 population cap</li>
-              <li><b>Barracks</b> – train soldiers &amp; archers</li>
-              <li><b>Blacksmith</b> – train knights</li>
-              <li><b>Mage Tower</b> – train mages</li>
-              <li><b>Watch Tower</b> – defensive structure</li>
+              <li><b>Barracks</b> – train Footman &amp; Archer</li>
+              <li><b>Blacksmith</b> – train Knight</li>
+              <li><b>Mage Tower</b> – train Mage</li>
+              <li><b>Stable</b> – train Cavalry</li>
+              <li><b>Siege Workshop</b> – train Catapult</li>
+              <li><b>Temple</b> – train Priest (healer)</li>
+              <li><b>Tavern</b> – train Hero (gains XP &amp; levels!)</li>
+              <li><b>Watch Tower</b> – auto-attacks enemies</li>
             </ul>
           </div>
         </div>
@@ -138,6 +149,14 @@
               <label><input type="radio" name="mapTheme" value="forest"> Forest</label>
               <label><input type="radio" name="mapTheme" value="islands"> Islands</label>
               <label><input type="radio" name="mapTheme" value="random"> Random</label>
+            </div>
+          </div>
+          <div class="menu-option-row">
+            <label>Starting Army:</label>
+            <div class="menu-radio-group">
+              <label><input type="radio" name="startArmy" value="none" checked> None (workers only)</label>
+              <label><input type="radio" name="startArmy" value="small"> Small (2 soldiers + archer)</label>
+              <label><input type="radio" name="startArmy" value="large"> Large (3 knights + army)</label>
             </div>
           </div>
           <div class="menu-btn-row">

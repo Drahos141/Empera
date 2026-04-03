@@ -1,0 +1,93 @@
+============================================================
+  EMPERA – Developer Q&A
+  Answers to your questions about the game
+============================================================
+
+Q: How to add more fantasy 2D pixel art?
+──────────────────────────────────────────────────────────
+The game currently draws all art procedurally using Canvas 2D API
+(no image files). Here are your options:
+
+OPTION A – Keep the procedural approach (current style):
+  • All unit, building and tile visuals are drawn in drawUnitSprite(),
+    drawBuilding(), and drawTile() functions in game.js
+  • To add new art, create a new case in the switch() block and
+    draw shapes using ctx.fillRect, ctx.arc, ctx.beginPath etc.
+  • This approach is lightweight and always crisp at any resolution
+
+OPTION B – Use real pixel art PNG sprites:
+  1. Create 48x48 (or 96x96 for @2x) PNG sprite sheets using:
+     • Aseprite (best pixel art tool, ~$20, worth every cent)
+     • LibreSprite (free, open source fork of Aseprite)
+     • Pixilart.com (free browser tool)
+     • Lospec.com/palette-list (for palette inspiration)
+  2. Load images in JS:
+       const img = new Image();
+       img.src = 'sprites/units.png';
+       img.onload = () => { /* game is ready */ };
+  3. In drawUnitSprite(), replace canvas drawing with:
+       ctx.drawImage(img, srcX, srcY, 48, 48, dx, dy, 48, 48);
+  4. Organize as a sprite sheet (all units on one PNG, units
+     in rows, animation frames in columns)
+
+OPTION C – Free fantasy pixel art resources:
+  • OpenGameArt.org – search "fantasy RTS" or "warcraft style"
+  • itch.io – search "pixel art fantasy game assets"
+  • Kenney.nl/assets – free game assets (not pixel art but clean)
+  • CraftPix.net – paid but affordable fantasy packs
+
+OPTION D – AI-generated pixel art:
+  • Midjourney with prompt: "pixel art fantasy warrior, 48x48, top down view"
+  • Leonardo.ai (free tier available): good for sprite sheets
+  • DALL-E 3: "16-bit pixel art [unit type], transparent background"
+
+Can I (the AI) create pixel art for you?
+  Unfortunately I cannot generate image files directly. I can only
+  create code that DRAWS shapes procedurally on the canvas.
+  For actual PNG pixel art files, use the tools listed above.
+  The existing procedural sprites in game.js are a good starting
+  point – they look stylized and match the game's aesthetic.
+
+============================================================
+Q: How can I (the AI) answer me?
+──────────────────────────────────────────────────────────
+I (GitHub Copilot) communicate through:
+  1. Code changes – I implement features directly into game.js
+  2. Text files like this one – for explanations and guides
+  3. Comments in code – for in-line documentation
+  4. PR descriptions – summarizing what was changed and why
+
+You can ask me questions in the chat and I'll either:
+  • Explain how something works
+  • Implement it directly in code
+  • Create answer files like this one
+
+============================================================
+What was added in this update:
+──────────────────────────────────────────────────────────
+FIXES:
+  ✅ Build menu no longer blinks – moved to dedicated right-side
+     panel that only rebuilds when affordability changes
+  ✅ Build panel separated from main canvas area – no interference
+     with map clicking
+
+NEW FEATURES:
+  ✅ Rally Points – select a training building, click "📍 Set Rally",
+     then right-click on map to set where new units spawn
+  ✅ Armor stat – all units have armor reducing incoming damage
+  ✅ Hero unit – trains from Tavern, gains XP on kills, 10 levels
+     L3: Battle Cry (boosts nearby allies), L5: Regeneration (passive HP regen)
+     L7: Thunder Bolt (unlocked), L10: Divine Shield (invulnerability)
+  ✅ New buildings: Stable, Siege Workshop, Temple, Tavern
+  ✅ New units: Cavalry (fast), Catapult (AOE ranged), Priest (healer),
+     Hero (XP leveling)
+  ✅ Natural creatures: Wolves (hostile packs), Deer (passive/flee),
+     Treant (rare elite guardian)
+  ✅ Starting army option in skirmish menu (None / Small / Large)
+  ✅ Animated projectiles for archers, mages, priests, catapults, towers
+  ✅ Patrol command – press P while units selected to set patrol route
+  ✅ Worker can repair damaged buildings (right-click own building)
+  ✅ Hero XP bar displayed above hero units
+  ✅ Rally point flag with dotted line shown on map
+
+============================================================

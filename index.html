@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Empera – Real Time Strategy</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="gameContainer">
+    <canvas id="gameCanvas"></canvas>
+
+    <!-- Top HUD -->
+    <div id="topHud">
+      <div id="gameTitle">⚔️ EMPERA</div>
+      <div id="resources">
+        <div class="resource" title="Gold – gather from gold mines">
+          <span class="res-icon gold-icon">💰</span>
+          <span id="gold">200</span>
+        </div>
+        <div class="resource" title="Wood – gather from forests">
+          <span class="res-icon wood-icon">🪵</span>
+          <span id="wood">150</span>
+        </div>
+        <div class="resource" title="Population – build Farms to increase cap">
+          <span class="res-icon pop-icon">👥</span>
+          <span id="pop">3/10</span>
+        </div>
+      </div>
+      <div id="topControls">
+        <button id="helpBtn" onclick="toggleHelp()">❓ Help</button>
+      </div>
+    </div>
+
+    <!-- Bottom Panel -->
+    <div id="bottomPanel">
+      <div id="selectionPanel">
+        <div class="no-selection">Select units or buildings<br><small>Left-click to select · Drag to box-select</small></div>
+      </div>
+      <div id="actionPanel">
+        <div id="actionButtons"></div>
+      </div>
+      <div id="minimapPanel">
+        <div id="minimapLabel">MAP</div>
+        <canvas id="minimap" width="192" height="144"></canvas>
+      </div>
+    </div>
+
+    <!-- Help overlay -->
+    <div id="helpOverlay" class="hidden">
+      <div id="helpContent">
+        <h2>⚔️ How to Play EMPERA</h2>
+        <div class="help-columns">
+          <div class="help-col">
+            <h3>Controls</h3>
+            <ul>
+              <li><b>Left-click</b> – select unit / building</li>
+              <li><b>Left-drag</b> – box-select multiple units</li>
+              <li><b>Right-click</b> – move / gather / attack</li>
+              <li><b>Arrow keys</b> – scroll map</li>
+              <li><b>Mouse edge</b> – auto-scroll map</li>
+              <li><b>A</b> – select all visible units</li>
+              <li><b>Esc</b> – deselect / cancel build</li>
+            </ul>
+          </div>
+          <div class="help-col">
+            <h3>Gathering</h3>
+            <ul>
+              <li>Select workers, right-click a <b>gold mine</b> (yellow) to gather gold</li>
+              <li>Select workers, right-click a <b>tree</b> (dark green) to chop wood</li>
+              <li>Workers automatically return to Main Hall and go back</li>
+            </ul>
+          </div>
+          <div class="help-col">
+            <h3>Buildings</h3>
+            <ul>
+              <li>Select a <b>worker</b> → Build menu appears</li>
+              <li>Click a building button, then click on the map to place</li>
+              <li>Send workers to a construction site to build it</li>
+              <li><b>Farm</b> – +5 population cap</li>
+              <li><b>Barracks</b> – train soldiers &amp; archers</li>
+              <li><b>Watch Tower</b> – defensive structure</li>
+              <li><b>Lumber Mill</b> – wood processing</li>
+            </ul>
+          </div>
+        </div>
+        <button onclick="toggleHelp()">▶ Start Playing</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>

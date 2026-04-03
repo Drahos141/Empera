@@ -26,21 +26,42 @@ const TILE_COLOR = [
 
 // ==================== DEFINITIONS ====================
 const BDEF = {
-  main_hall:   { name:'Main Hall',   size:3, maxHp:1200, cost:{gold:0,   wood:0},   buildTime:0,   popBonus:0, color:'#9b7a2a', border:'#6a4a10', trains:['worker'] },
-  barracks:    { name:'Barracks',    size:2, maxHp:600,  cost:{gold:150, wood:100}, buildTime:360, popBonus:0, color:'#3a3a7a', border:'#1a1a5a', trains:['soldier','archer'] },
-  farm:        { name:'Farm',        size:2, maxHp:250,  cost:{gold:80,  wood:60},  buildTime:150, popBonus:5, color:'#4a7a2a', border:'#2a5a0a', trains:[] },
-  lumber_mill: { name:'Lumber Mill', size:2, maxHp:300,  cost:{gold:100, wood:80},  buildTime:200, popBonus:0, color:'#7a4a1a', border:'#5a2a0a', trains:[] },
-  tower:       { name:'Watch Tower', size:1, maxHp:500,  cost:{gold:100, wood:80},  buildTime:200, popBonus:0, color:'#8a8a6a', border:'#5a5a3a', trains:[], range:7, damage:20, atkSpeed:60 },
-  blacksmith:  { name:'Blacksmith',  size:2, maxHp:400,  cost:{gold:120, wood:80},  buildTime:240, popBonus:0, color:'#4a3a2a', border:'#2a1a0a', trains:['knight'] },
-  mage_tower:  { name:'Mage Tower',  size:2, maxHp:350,  cost:{gold:200, wood:50},  buildTime:300, popBonus:0, color:'#4a2a6a', border:'#2a0a4a', trains:['mage'] },
+  main_hall:      { name:'Main Hall',      size:3, maxHp:1200, cost:{gold:0,   wood:0},   buildTime:0,   popBonus:0,  color:'#9b7a2a', border:'#6a4a10', trains:['worker'] },
+  barracks:       { name:'Barracks',       size:2, maxHp:600,  cost:{gold:150, wood:100}, buildTime:360, popBonus:0,  color:'#3a3a7a', border:'#1a1a5a', trains:['soldier','archer'] },
+  farm:           { name:'Farm',           size:2, maxHp:250,  cost:{gold:80,  wood:60},  buildTime:150, popBonus:5,  color:'#4a7a2a', border:'#2a5a0a', trains:[] },
+  lumber_mill:    { name:'Lumber Mill',    size:2, maxHp:300,  cost:{gold:100, wood:80},  buildTime:200, popBonus:0,  color:'#7a4a1a', border:'#5a2a0a', trains:[] },
+  tower:          { name:'Watch Tower',    size:1, maxHp:500,  cost:{gold:100, wood:80},  buildTime:200, popBonus:0,  color:'#8a8a6a', border:'#5a5a3a', trains:[], range:7, damage:20, atkSpeed:60 },
+  blacksmith:     { name:'Blacksmith',     size:2, maxHp:400,  cost:{gold:120, wood:80},  buildTime:240, popBonus:0,  color:'#4a3a2a', border:'#2a1a0a', trains:['knight'] },
+  mage_tower:     { name:'Mage Tower',     size:2, maxHp:350,  cost:{gold:200, wood:50},  buildTime:300, popBonus:0,  color:'#4a2a6a', border:'#2a0a4a', trains:['mage'] },
+  stable:         { name:'Stable',         size:2, maxHp:450,  cost:{gold:180, wood:120}, buildTime:280, popBonus:0,  color:'#7a5a30', border:'#5a3a10', trains:['cavalry'] },
+  siege_workshop: { name:'Siege Workshop', size:2, maxHp:400,  cost:{gold:200, wood:150}, buildTime:320, popBonus:0,  color:'#5a5a40', border:'#3a3a20', trains:['catapult'] },
+  temple:         { name:'Temple',         size:2, maxHp:380,  cost:{gold:150, wood:100}, buildTime:260, popBonus:0,  color:'#b0a060', border:'#8a7a30', trains:['priest'] },
+  tavern:         { name:'Tavern',         size:2, maxHp:300,  cost:{gold:250, wood:100}, buildTime:300, popBonus:0,  color:'#8a4a2a', border:'#6a2a0a', trains:['hero'] },
 };
 
 const UDEF = {
-  worker:  { name:'Worker',  maxHp:70,  speed:2.5, cost:{gold:80,  wood:0},  trainTime:200, color:'#c8a050', size:11, damage:6,  range:1.2, atkSpeed:45, canGather:true,  canBuild:true  },
-  soldier: { name:'Footman', maxHp:150, speed:2.0, cost:{gold:130, wood:0},  trainTime:280, color:'#4a7adf', size:12, damage:20, range:1.2, atkSpeed:40, canGather:false, canBuild:false },
-  archer:  { name:'Archer',  maxHp:90,  speed:2.2, cost:{gold:100, wood:50}, trainTime:250, color:'#3aa060', size:10, damage:14, range:6.0, atkSpeed:50, canGather:false, canBuild:false },
-  knight:  { name:'Knight',  maxHp:250, speed:1.8, cost:{gold:200, wood:0},  trainTime:350, color:'#9090c0', size:13, damage:35, range:1.2, atkSpeed:50, canGather:false, canBuild:false },
-  mage:    { name:'Mage',    maxHp:80,  speed:2.0, cost:{gold:150, wood:50}, trainTime:300, color:'#b060d0', size:10, damage:25, range:5.0, atkSpeed:60, canGather:false, canBuild:false },
+  worker:   { name:'Worker',   maxHp:70,  speed:2.5, cost:{gold:80,  wood:0},   trainTime:200, color:'#c8a050', size:11, damage:6,  range:1.2, atkSpeed:45, armor:1, canGather:true,  canBuild:true  },
+  soldier:  { name:'Footman',  maxHp:150, speed:2.0, cost:{gold:130, wood:0},   trainTime:280, color:'#4a7adf', size:12, damage:20, range:1.2, atkSpeed:40, armor:3, canGather:false, canBuild:false },
+  archer:   { name:'Archer',   maxHp:90,  speed:2.2, cost:{gold:100, wood:50},  trainTime:250, color:'#3aa060', size:10, damage:14, range:6.0, atkSpeed:50, armor:1, canGather:false, canBuild:false },
+  knight:   { name:'Knight',   maxHp:250, speed:1.8, cost:{gold:200, wood:0},   trainTime:350, color:'#9090c0', size:13, damage:35, range:1.2, atkSpeed:50, armor:8, canGather:false, canBuild:false },
+  mage:     { name:'Mage',     maxHp:80,  speed:2.0, cost:{gold:150, wood:50},  trainTime:300, color:'#b060d0', size:10, damage:25, range:5.0, atkSpeed:60, armor:0, canGather:false, canBuild:false },
+  cavalry:  { name:'Cavalry',  maxHp:220, speed:3.2, cost:{gold:180, wood:0},   trainTime:360, color:'#a08040', size:14, damage:30, range:1.2, atkSpeed:40, armor:4, canGather:false, canBuild:false },
+  catapult: { name:'Catapult', maxHp:120, speed:0.9, cost:{gold:220, wood:80},  trainTime:450, color:'#707058', size:15, damage:65, range:8.0, atkSpeed:140,armor:0, canGather:false, canBuild:false },
+  priest:   { name:'Priest',   maxHp:75,  speed:2.1, cost:{gold:140, wood:30},  trainTime:280, color:'#e8e8c0', size:10, damage:8,  range:4.5, atkSpeed:55, armor:0, canGather:false, canBuild:false },
+  hero:     { name:'Hero',     maxHp:200, speed:2.3, cost:{gold:300, wood:50},  trainTime:500, color:'#ffd700', size:13, damage:30, range:1.5, atkSpeed:38, armor:5, canGather:false, canBuild:false, isHero:true },
+  // Neutral creatures (no cost, spawned by map)
+  wolf:     { name:'Wolf',     maxHp:60,  speed:2.8, cost:{gold:0,   wood:0},   trainTime:0,   color:'#909090', size:10, damage:12, range:1.1, atkSpeed:35, armor:0, canGather:false, canBuild:false },
+  deer:     { name:'Deer',     maxHp:30,  speed:3.1, cost:{gold:0,   wood:0},   trainTime:0,   color:'#b08050', size:9,  damage:0,  range:0,   atkSpeed:999,armor:0, canGather:false, canBuild:false },
+  treant:   { name:'Treant',   maxHp:400, speed:1.2, cost:{gold:0,   wood:0},   trainTime:0,   color:'#2a5a0a', size:17, damage:25, range:1.5, atkSpeed:70, armor:3, canGather:false, canBuild:false },
+};
+
+// XP thresholds for hero levels 1-10 (index = level-1)
+const HERO_XP_THRESH = [0, 100, 250, 450, 700, 1000, 1400, 1850, 2400, 3000];
+// XP awarded per enemy kill by type
+const XP_REWARD = {
+  worker:20, soldier:40, archer:35, knight:70, mage:60,
+  cavalry:65, catapult:80, priest:35, hero:150,
+  wolf:15, deer:8, treant:100,
 };
 
 // ==================== GAME STATE ====================
@@ -53,14 +74,20 @@ let keys      = {};
 let entities  = [];
 let selectedIds = new Set();
 let buildMode = null;
+let rallyMode = null;   // building id currently having its rally set
 let frame     = 0;
 let resources = { gold:200, wood:150 };
 let pop       = { cur:0, max:10 };
 let map       = [];
 let tileHP    = {};
 let notes     = [];
+let projectiles = []; // { x, y, tx, ty, speed, color, damage, owner, targetId, aoe }
 let eid       = 0;
 let loopRunning = false;
+
+// UI state (used to prevent unnecessary DOM rebuilds)
+let lastBuildPanelHash = '';
+let lastSelPanelHash   = '';
 
 // AI state
 let aiResources      = { gold:300, wood:200 };
@@ -341,6 +368,7 @@ function makeBuilding(type,tx,ty,constructed=false,owner='player') {
     buildProg:constructed?1:0,
     trainQueue:[], trainProg:0, lastAtk:0,
     popBonus:def.popBonus||0,
+    rallyX:null, rallyY:null,  // rally point (world coords)
   };
   entities.push(e);
   if (e.popBonus) {
@@ -358,27 +386,38 @@ function makeUnit(type,x,y,owner='player') {
     hp:def.maxHp, maxHp:def.maxHp,
     speed:def.speed, size:def.size,
     damage:def.damage, range:def.range, atkSpeed:def.atkSpeed,
+    armor:def.armor||0,
     canGather:def.canGather, canBuild:def.canBuild,
     state:'idle',
     path:[], targetTile:null, target:null, buildTarget:null,
     carryGold:0, carryWood:0,
-    gatherTimer:0, atkTimer:0,
+    gatherTimer:0, atkTimer:0, healTimer:0,
     lastResType:null, angle:0,
     stuckTimer:0, lastX:x, lastY:y,
+    // Hero fields
+    isHero: def.isHero||false,
+    xp: 0, level: 1,
+    skillCooldowns:{},
   };
   entities.push(e);
   if (owner==='ai') aiPop.cur++;
-  else pop.cur++;
+  else if (owner==='player') pop.cur++;
+  // neutrals don't count against any pop
   return e;
 }
 
-function removeEntity(id) {
+function removeEntity(id, killerUnit) {
   const i=entities.findIndex(e=>e.id===id);
   if (i===-1) return;
   const e=entities[i];
   if (e.isUnit) {
     if (e.owner==='ai') aiPop.cur=Math.max(0,aiPop.cur-1);
-    else pop.cur=Math.max(0,pop.cur-1);
+    else if (e.owner==='player') pop.cur=Math.max(0,pop.cur-1);
+    // Award XP to killer hero
+    if (killerUnit && killerUnit.isHero && killerUnit.owner!==e.owner) {
+      const xpGain = XP_REWARD[e.type] || 20;
+      grantHeroXP(killerUnit, xpGain);
+    }
   }
   if (!e.isUnit&&e.popBonus) {
     if (e.owner==='ai') aiPop.max=Math.max(0,aiPop.max-e.popBonus);
@@ -386,6 +425,29 @@ function removeEntity(id) {
   }
   entities.splice(i,1);
   selectedIds.delete(id);
+}
+
+function grantHeroXP(hero, amount) {
+  hero.xp += amount;
+  const maxLevel = HERO_XP_THRESH.length;
+  while (hero.level < maxLevel) {
+    const needed = HERO_XP_THRESH[hero.level]; // next level threshold
+    if (hero.xp >= needed) {
+      hero.level++;
+      // Stat gains per level
+      const bonusHp   = 20;
+      const bonusDmg  = 3;
+      const bonusArmor= 1;
+      hero.maxHp   += bonusHp;
+      hero.hp      = Math.min(hero.hp + bonusHp, hero.maxHp);
+      hero.damage  += bonusDmg;
+      hero.armor   += bonusArmor;
+      addNote(`⬆ Hero Lv${hero.level}!`, hero.x, hero.y, '#ffd700');
+      // Skill at levels 3, 5, 7, 10
+      const skills = {3:'Battle Cry', 5:'Regeneration', 7:'Thunder Bolt', 10:'Divine Shield'};
+      if (skills[hero.level]) addNote(`Skill: ${skills[hero.level]}`, hero.x, hero.y-24, '#ffaaff');
+    } else break;
+  }
 }
 
 // ==================== COMMANDS ====================
@@ -465,6 +527,19 @@ function followPath(unit) {
   return false;
 }
 
+function dealDamage(attacker, target, dmg) {
+  const actual = Math.max(1, dmg - (target.armor||0));
+  target.hp -= actual;
+  addNote(`-${actual}`, target.x, target.y, '#ff6666');
+  return actual;
+}
+
+function spawnProjectile(fromX, fromY, target, speed, color, damage, owner, aoe) {
+  const tx = target.isUnit ? target.x : target.x + (BDEF[target.type]?.size||1)*TS/2;
+  const ty = target.isUnit ? target.y : target.y + (BDEF[target.type]?.size||1)*TS/2;
+  projectiles.push({ x:fromX, y:fromY, tx, ty, speed, color, damage, owner, targetId:target.id, aoe:aoe||0, life:0 });
+}
+
 function updateUnit(unit) {
   // Stuck detection
   if (unit.path&&unit.path.length>0) {
@@ -479,18 +554,114 @@ function updateUnit(unit) {
   }
 
   const isAI=unit.owner==='ai';
+  const isNeutral=unit.owner==='neutral';
 
-  // AI military: auto-attack nearby player entities within 8 tiles
+  // ── Neutral creature AI ──────────────────────────────
+  if (isNeutral) {
+    if (unit.type==='wolf' || unit.type==='treant') {
+      if (unit.state==='idle') {
+        // Wolves and treants attack nearby units of any faction
+        let nearest=null, nearestD=(unit.type==='treant'?5:8)*TS;
+        for (const e of entities) {
+          if (e.owner==='neutral') continue;
+          const ex=e.isUnit?e.x:e.x+(BDEF[e.type]?.size||1)*TS/2;
+          const ey=e.isUnit?e.y:e.y+(BDEF[e.type]?.size||1)*TS/2;
+          const d=d2(unit.x,unit.y,ex,ey);
+          if (d<nearestD) { nearestD=d; nearest=e; }
+        }
+        if (nearest) { unit.target=nearest.id; unit.state='attacking'; unit.path=[]; }
+      }
+    } else if (unit.type==='deer') {
+      if (unit.state==='idle') {
+        // Deer flee from nearby units
+        let nearestD=5*TS;
+        let fleeDir=null;
+        for (const e of entities) {
+          if (e.owner==='neutral') continue;
+          const d=d2(unit.x,unit.y,e.x,e.y);
+          if (d<nearestD) { nearestD=d; fleeDir={dx:unit.x-e.x, dy:unit.y-e.y}; }
+        }
+        if (fleeDir) {
+          const len=Math.sqrt(fleeDir.dx**2+fleeDir.dy**2)||1;
+          const fx=unit.x+(fleeDir.dx/len)*8*TS;
+          const fy=unit.y+(fleeDir.dy/len)*8*TS;
+          const tx2=clamp(Math.floor(fx/TS),0,MW-1);
+          const ty2=clamp(Math.floor(fy/TS),0,MH-1);
+          cmdMove(unit, clamp(fx,0,MW*TS-1), clamp(fy,0,MH*TS-1));
+        }
+      }
+    }
+  }
+
+  // ── AI military: auto-attack nearby player entities within 8 tiles ──
   if (isAI&&unit.state==='idle'&&unit.type!=='worker') {
     let nearest=null, nearestD=8*TS;
     for (const e of entities) {
       if ((e.owner||'player')==='ai') continue;
+      if (e.owner==='neutral') continue;
       const cx=e.isUnit?e.x:e.x+(BDEF[e.type]?.size||1)*TS/2;
       const cy=e.isUnit?e.y:e.y+(BDEF[e.type]?.size||1)*TS/2;
       const d=d2(unit.x,unit.y,cx,cy);
       if (d<nearestD) { nearestD=d; nearest=e; }
     }
     if (nearest) { unit.target=nearest.id; unit.state='attacking'; unit.path=[]; }
+  }
+
+  // ── Priest healing ─────────────────────────────────────
+  if (!isNeutral && unit.type==='priest' && unit.state==='idle') {
+    unit.healTimer=(unit.healTimer||0)+1;
+    if (unit.healTimer>=80) {
+      unit.healTimer=0;
+      let worstAlly=null, worstHp=0.95;
+      for (const e of entities) {
+        if (!e.isUnit||e.owner!==unit.owner) continue;
+        const hpf=e.hp/e.maxHp;
+        if (hpf<worstHp && d2(unit.x,unit.y,e.x,e.y)<5*TS) { worstHp=hpf; worstAlly=e; }
+      }
+      if (worstAlly) {
+        const heal=Math.min(15, worstAlly.maxHp-worstAlly.hp);
+        worstAlly.hp+=heal;
+        addNote(`+${heal}`, worstAlly.x, worstAlly.y, '#88ff88');
+      }
+    }
+  }
+
+  // ── Hero passive skills ─────────────────────────────────
+  if (unit.isHero) {
+    const cd=unit.skillCooldowns;
+    // L5: Regeneration – heal 1 HP/sec
+    if (unit.level>=5) {
+      cd.regen=(cd.regen||0)+1;
+      if (cd.regen>=60 && unit.hp<unit.maxHp) { unit.hp=Math.min(unit.maxHp,unit.hp+1); cd.regen=0; }
+    }
+    // L3: Battle Cry – every 600 frames boost nearby allies for 1 frame (visual note)
+    if (unit.level>=3) {
+      cd.cry=(cd.cry||0)+1;
+      if (cd.cry>=600) {
+        cd.cry=0;
+        addNote('⚔ Battle Cry!', unit.x, unit.y-16, '#ff8800');
+        for (const e of entities) {
+          if (!e.isUnit||e.owner!==unit.owner) continue;
+          if (d2(unit.x,unit.y,e.x,e.y)<6*TS) {
+            // Temporary +8 damage (applied as bonus here, just visual)
+            addNote('↑ATK', e.x, e.y, '#ffaa44');
+          }
+        }
+      }
+    }
+    // L10: Divine Shield – once per 1800 frames, when HP < 30%, become invulnerable for 180 frames
+    if (unit.level>=10) {
+      if (!cd.shieldActive) {
+        cd.shieldCd=(cd.shieldCd||0)+1;
+        if (unit.hp/unit.maxHp<0.3 && cd.shieldCd>1800) {
+          cd.shieldCd=0; cd.shieldActive=180;
+          addNote('🛡 Divine Shield!', unit.x, unit.y-16, '#aaddff');
+        }
+      } else {
+        cd.shieldActive--;
+        if (cd.shieldActive<=0) delete cd.shieldActive;
+      }
+    }
   }
 
   switch (unit.state) {
@@ -501,6 +672,30 @@ function updateUnit(unit) {
     case 'moving':
       if (followPath(unit)) unit.state='idle';
       break;
+
+    case 'patrolling': {
+      if (!unit.patrolA||!unit.patrolB) { unit.state='idle'; break; }
+      const dest=unit.patrolTarget===1?unit.patrolB:unit.patrolA;
+      if (!unit.path||!unit.path.length) {
+        const utx=Math.floor(unit.x/TS), uty=Math.floor(unit.y/TS);
+        const dtx=Math.floor(dest.x/TS), dty=Math.floor(dest.y/TS);
+        const p=findPath(utx,uty,dtx,dty);
+        if (p) unit.path=p; else { unit.state='idle'; break; }
+      }
+      if (followPath(unit)) { unit.patrolTarget = unit.patrolTarget===1?2:1; }
+      // Attack enemies on patrol
+      let nearestEnemy=null, nearestD=4*TS;
+      for (const e of entities) {
+        if (!isNeutral && e.owner===unit.owner) continue;
+        if (isNeutral && e.owner==='neutral') continue;
+        const ex=e.isUnit?e.x:e.x+(BDEF[e.type]?.size||1)*TS/2;
+        const ey=e.isUnit?e.y:e.y+(BDEF[e.type]?.size||1)*TS/2;
+        const d=d2(unit.x,unit.y,ex,ey);
+        if (d<nearestD) { nearestD=d; nearestEnemy=e; }
+      }
+      if (nearestEnemy) { unit.patrolInterrupt={x:unit.x,y:unit.y}; unit.target=nearestEnemy.id; unit.state='attacking'; }
+      break;
+    }
 
     case 'moving_gather': {
       const done=followPath(unit);
@@ -606,8 +801,17 @@ function updateUnit(unit) {
     }
 
     case 'attacking': {
+      // Divine Shield: immune to damage
+      if (unit.isHero && unit.skillCooldowns?.shieldActive>0) {
+        unit.state='idle'; unit.target=null; break;
+      }
       const tgt=getEntity(unit.target);
-      if (!tgt||tgt.hp<=0) { unit.state='idle'; unit.target=null; break; }
+      if (!tgt||tgt.hp<=0) {
+        unit.state='idle'; unit.target=null;
+        // Return to patrol if interrupted
+        if (unit.patrolInterrupt) { cmdMove(unit,unit.patrolInterrupt.x,unit.patrolInterrupt.y); unit.state='patrolling'; unit.patrolInterrupt=null; }
+        break;
+      }
       const tx2=tgt.x+(tgt.isUnit?0:(BDEF[tgt.type]?.size||1)*TS/2);
       const ty2=tgt.y+(tgt.isUnit?0:(BDEF[tgt.type]?.size||1)*TS/2);
       const dv=d2(unit.x,unit.y,tx2,ty2);
@@ -626,9 +830,19 @@ function updateUnit(unit) {
         unit.atkTimer++;
         if (unit.atkTimer>=unit.atkSpeed) {
           unit.atkTimer=0;
-          tgt.hp-=unit.damage;
-          addNote(`-${unit.damage}`,tgt.x,tgt.y,'#ff6666');
-          if (tgt.hp<=0) { removeEntity(tgt.id); unit.state='idle'; unit.target=null; }
+          // Ranged units (archer, mage, priest, catapult) spawn projectile
+          const useProjectile = unit.range>2.5;
+          if (useProjectile) {
+            const pColor = unit.type==='archer'?'#c8b080':unit.type==='mage'?'#cc66ff':unit.type==='priest'?'#ffffff':'#ff8800';
+            const aoe = unit.type==='catapult'?2.0:0;
+            spawnProjectile(unit.x, unit.y-unit.size*0.3, tgt, 6, pColor, unit.damage, unit, aoe);
+          } else {
+            // Shield check for target hero
+            if (!(tgt.isHero && tgt.skillCooldowns?.shieldActive>0)) {
+              const actual = dealDamage(unit, tgt, unit.damage);
+              if (tgt.hp<=0) { removeEntity(tgt.id, unit); unit.state='idle'; unit.target=null; }
+            }
+          }
         }
       }
       break;
@@ -683,6 +897,10 @@ function updateBuilding(b) {
       if (curPop<maxPop) {
         const u=makeUnit(utype,spawnX,spawnY,owner);
         if (owner==='player') addNote(`${UDEF[utype].name} ready!`,spawnX,spawnY,'#88ff88');
+        // Send to rally point if set
+        if (b.rallyX!==null && u) {
+          cmdMove(u, b.rallyX, b.rallyY);
+        }
       }
       if (!b.trainQueue.length) b.state='idle';
     }
@@ -690,7 +908,7 @@ function updateBuilding(b) {
     b.state='idle';
   }
 
-  // Tower auto-attack enemies
+  // Tower auto-attack enemies (shoots projectile)
   if (b.type==='tower') {
     const def=BDEF.tower;
     b.lastAtk++;
@@ -702,17 +920,62 @@ function updateBuilding(b) {
       let nearest=null, nearestD=range;
       for (const e of entities) {
         if ((e.owner||'player')===bOwner) continue;
+        if (e.owner==='neutral') continue;
         const ex=e.isUnit?e.x:e.x+(BDEF[e.type]?.size||1)*TS/2;
         const ey=e.isUnit?e.y:e.y+(BDEF[e.type]?.size||1)*TS/2;
         const d=d2(cx,cy,ex,ey);
         if (d<nearestD) { nearestD=d; nearest=e; }
       }
       if (nearest) {
-        nearest.hp-=def.damage;
-        addNote(`-${def.damage}`,nearest.x,nearest.y,'#ff6666');
-        if (nearest.hp<=0) removeEntity(nearest.id);
+        // Tower fires an arrow projectile
+        spawnProjectile(cx, cy, nearest, 7, '#ffd700', def.damage, {owner:bOwner, damage:def.damage}, 0);
       }
     }
+  }
+}
+
+// ==================== PROJECTILE UPDATE ====================
+function updateProjectiles() {
+  for (let i=projectiles.length-1;i>=0;i--) {
+    const p=projectiles[i];
+    const dx=p.tx-p.x, dy=p.ty-p.y;
+    const d=Math.sqrt(dx*dx+dy*dy);
+    if (d<p.speed+2) {
+      // Hit!
+      if (p.aoe>0) {
+        // AOE splash (catapult)
+        const aoePx = p.aoe*TS;
+        for (const e of [...entities]) {
+          if (!e.isUnit) continue;
+          if (e.owner===p.owner.owner) continue;
+          if (d2(p.tx,p.ty,e.x,e.y)<aoePx) {
+            if (!(e.isHero && e.skillCooldowns?.shieldActive>0)) {
+              dealDamage(p.owner, e, Math.round(p.damage*(0.5+0.5*(1-d2(p.tx,p.ty,e.x,e.y)/aoePx))));
+              if (e.hp<=0) removeEntity(e.id, p.owner);
+            }
+          }
+        }
+      } else {
+        // Single target
+        const tgt=getEntity(p.targetId);
+        if (tgt && tgt.hp>0) {
+          if (!(tgt.isHero && tgt.skillCooldowns?.shieldActive>0)) {
+            dealDamage(p.owner, tgt, p.damage);
+            if (tgt.hp<=0) removeEntity(tgt.id, p.owner);
+          }
+        }
+      }
+      projectiles.splice(i,1);
+      continue;
+    }
+    p.x+=dx/d*p.speed;
+    p.y+=dy/d*p.speed;
+    p.life++;
+    // Remove stale projectiles
+    if (p.life>300) { projectiles.splice(i,1); continue; }
+    // Update target position (tracking)
+    const tgt2=getEntity(p.targetId);
+    if (tgt2 && tgt2.isUnit) { p.tx=tgt2.x; p.ty=tgt2.y; }
   }
 }
 
@@ -738,32 +1001,43 @@ function updateAI() {
     }
   }
 
-  // Build barracks once when resources allow
-  const hasBarracks=entities.some(e=>!e.isUnit&&e.owner==='ai'&&e.type==='barracks');
-  if (!hasBarracks&&!aiBuildAttempted&&aiResources.gold>=150&&aiResources.wood>=100&&aiHall) {
-    const hallTx=Math.floor(aiHall.x/TS);
-    const hallTy=Math.floor(aiHall.y/TS);
-    let placed=false;
-    outer: for (let r=4;r<=12;r++) {
+  // AI tries to build barracks + farm when able
+  function aiBuildNear(btype, cost) {
+    if (!aiHall) return false;
+    const hallTx=Math.floor(aiHall.x/TS), hallTy=Math.floor(aiHall.y/TS);
+    for (let r=4;r<=12;r++) {
       for (let dy=-r;dy<=r;dy++) {
         for (let dx=-r;dx<=r;dx++) {
           const tx=hallTx+dx, ty=hallTy+dy;
           if (tx<1||ty<1||tx>=MW-3||ty>=MH-3) continue;
           let valid=true;
-          for (let oy=0;oy<2&&valid;oy++)
-            for (let ox=0;ox<2&&valid;ox++)
+          const sz=BDEF[btype].size;
+          for (let oy=0;oy<sz&&valid;oy++)
+            for (let ox=0;ox<sz&&valid;ox++)
               if (!walkable(tx+ox,ty+oy)||tileOccupied(tx+ox,ty+oy)) valid=false;
           if (valid) {
-            aiResources.gold-=150; aiResources.wood-=100;
-            const bld=makeBuilding('barracks',tx,ty,false,'ai');
+            aiResources.gold-=cost.gold; aiResources.wood-=cost.wood;
+            const bld=makeBuilding(btype,tx,ty,false,'ai');
             if (aiWorkers.length>0) cmdBuild(aiWorkers[0],bld.id);
-            aiBuildAttempted=true; placed=true;
-            break outer;
+            return true;
           }
         }
       }
     }
-    if (!placed) aiBuildAttempted=true;
+    return false;
+  }
+
+  // Build barracks once
+  const hasBarracks=entities.some(e=>!e.isUnit&&e.owner==='ai'&&e.type==='barracks');
+  if (!hasBarracks&&!aiBuildAttempted&&aiResources.gold>=150&&aiResources.wood>=100) {
+    if (aiBuildNear('barracks',{gold:150,wood:100})) aiBuildAttempted=true;
+    else aiBuildAttempted=true;
+  }
+
+  // Build farm when pop is near cap
+  const hasFarm=entities.some(e=>!e.isUnit&&e.owner==='ai'&&e.type==='farm');
+  if (!hasFarm&&aiPop.cur>=aiPop.max-2&&aiResources.gold>=80&&aiResources.wood>=60) {
+    aiBuildNear('farm',{gold:80,wood:60});
   }
 
   // Train units every 600 frames at barracks
@@ -1031,7 +1305,68 @@ function drawBuilding(b) {
       ctx.fillRect(sx+w*0.44,sy+h*0.58,w*0.12,h*0.18);
       break;
     }
-  }
+    case 'stable': {
+      // Stable: brown building with hay and horse stall
+      ctx.fillStyle='#5a3808'; ctx.fillRect(sx+w*0.06,sy+h*0.16,w*0.88,h*0.80);
+      // Roof
+      ctx.fillStyle='#7a5020';
+      ctx.beginPath(); ctx.moveTo(sx+w*0.0,sy+h*0.18); ctx.lineTo(sx+w*0.5,sy+h*0.0); ctx.lineTo(sx+w,sy+h*0.18); ctx.closePath(); ctx.fill();
+      // Stall dividers
+      ctx.strokeStyle='#8b5a20'; ctx.lineWidth=2;
+      for (let i=0;i<2;i++) ctx.strokeRect(sx+w*(0.12+i*0.38),sy+h*0.42,w*0.3,h*0.5);
+      // Hay
+      ctx.fillStyle='#e8c84a'; ctx.fillRect(sx+w*0.15,sy+h*0.62,w*0.2,h*0.08);
+      ctx.fillRect(sx+w*0.55,sy+h*0.62,w*0.2,h*0.08);
+      break;
+    }
+    case 'siege_workshop': {
+      // Workshop: stone building with catapult arm visible
+      ctx.fillStyle='#3a3830'; ctx.fillRect(sx+w*0.06,sy+h*0.14,w*0.88,h*0.82);
+      ctx.fillStyle='#505048';
+      ctx.beginPath(); ctx.moveTo(sx,sy+h*0.16); ctx.lineTo(sx+w*0.5,sy); ctx.lineTo(sx+w,sy+h*0.16); ctx.closePath(); ctx.fill();
+      // Catapult arm outline
+      ctx.strokeStyle='#8b6020'; ctx.lineWidth=3;
+      ctx.beginPath(); ctx.moveTo(sx+w*0.5,sy+h*0.7); ctx.lineTo(sx+w*0.3,sy+h*0.32); ctx.stroke();
+      ctx.beginPath(); ctx.arc(sx+w*0.5,sy+h*0.7,w*0.06,0,Math.PI*2); ctx.fillStyle='#606048'; ctx.fill();
+      // Stone pile
+      ctx.fillStyle='#707068';
+      for (let i=0;i<3;i++) { ctx.beginPath(); ctx.arc(sx+w*(0.65+i*0.1),sy+h*0.72,w*0.06,0,Math.PI*2); ctx.fill(); }
+      break;
+    }
+    case 'temple': {
+      // Temple: white/gold columns
+      ctx.fillStyle='#c8c090'; ctx.fillRect(sx+w*0.1,sy+h*0.22,w*0.8,h*0.74);
+      ctx.fillStyle='#e8e0b0';
+      ctx.beginPath(); ctx.moveTo(sx+w*0.08,sy+h*0.24); ctx.lineTo(sx+w*0.5,sy+h*0.02); ctx.lineTo(sx+w*0.92,sy+h*0.24); ctx.closePath(); ctx.fill();
+      // Columns
+      ctx.fillStyle='#d8d0a0';
+      for (let i=0;i<3;i++) ctx.fillRect(sx+w*(0.16+i*0.28),sy+h*0.24,w*0.1,h*0.72);
+      // Divine glow
+      ctx.fillStyle='rgba(255,240,100,0.25)';
+      ctx.beginPath(); ctx.arc(sx+w/2,sy+h*0.4,w*0.3,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle='#f8e050'; ctx.fillRect(sx+w*0.46,sy+h*0.28,w*0.08,h*0.12);
+      ctx.fillRect(sx+w*0.42,sy+h*0.32,w*0.16,h*0.04);
+      break;
+    }
+    case 'tavern': {
+      // Tavern: cozy wooden building with sign
+      ctx.fillStyle='#6a3a1a'; ctx.fillRect(sx+w*0.06,sy+h*0.18,w*0.88,h*0.78);
+      ctx.fillStyle='#8b5a28';
+      ctx.beginPath(); ctx.moveTo(sx,sy+h*0.2); ctx.lineTo(sx+w*0.5,sy+h*0.0); ctx.lineTo(sx+w,sy+h*0.2); ctx.closePath(); ctx.fill();
+      // Windows with warm glow
+      ctx.fillStyle='#ffe080'; ctx.fillRect(sx+w*0.12,sy+h*0.36,w*0.22,h*0.22);
+      ctx.fillRect(sx+w*0.66,sy+h*0.36,w*0.22,h*0.22);
+      // Door
+      ctx.fillStyle='#3a1e0a'; ctx.fillRect(sx+w*0.38,sy+h*0.54,w*0.24,h*0.42);
+      ctx.fillStyle='#c8a050'; ctx.fillRect(sx+w*0.44,sy+h*0.58,w*0.04,h*0.04); // knob
+      // Hanging sign
+      ctx.strokeStyle='#8b5a20'; ctx.lineWidth=1;
+      ctx.strokeRect(sx+w*0.58,sy+h*0.14,w*0.22,h*0.12);
+      ctx.fillStyle='#e8c84a'; ctx.font='7px Courier New'; ctx.textAlign='center';
+      ctx.fillText('⚔',sx+w*0.69,sy+h*0.22);
+      break;
+    }
+  } // end switch(b.type)
 
   if (sel) {
     ctx.strokeStyle=isAI?'#ff4444':'#00ff88'; ctx.lineWidth=2;
@@ -1051,6 +1386,19 @@ function drawBuilding(b) {
 
   ctx.fillStyle='#ffffff88'; ctx.font='9px Courier New'; ctx.textAlign='center';
   ctx.fillText(def.name,sx+sz/2,sy+sz+11);
+
+  // Draw rally point line and flag
+  if (b.rallyX!==null && b.owner==='player') {
+    const rx=b.rallyX-camera.x, ry=b.rallyY-camera.y;
+    ctx.strokeStyle='rgba(0,255,136,0.4)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+    ctx.beginPath(); ctx.moveTo(sx+sz/2,sy+sz/2); ctx.lineTo(rx,ry); ctx.stroke();
+    ctx.setLineDash([]);
+    // Flag pole
+    ctx.strokeStyle='#00ff88'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(rx,ry); ctx.lineTo(rx,ry-14); ctx.stroke();
+    ctx.fillStyle='#00ff88';
+    ctx.beginPath(); ctx.moveTo(rx,ry-14); ctx.lineTo(rx+8,ry-10); ctx.lineTo(rx,ry-6); ctx.closePath(); ctx.fill();
+  }
 }
 
 function drawUnit(u) {
@@ -1058,16 +1406,23 @@ function drawUnit(u) {
   const s=u.size;
   const sel=selectedIds.has(u.id);
   const isAI=u.owner==='ai';
+  const isNeutral=u.owner==='neutral';
 
   if (sel) {
-    ctx.strokeStyle=isAI?'#ff4444':'#00ff88'; ctx.lineWidth=2;
+    ctx.strokeStyle=isNeutral?'#ff8800':isAI?'#ff4444':'#00ff88'; ctx.lineWidth=2;
     ctx.beginPath(); ctx.ellipse(sx,sy+2,s+5,s*0.55,0,0,Math.PI*2); ctx.stroke();
   }
 
   ctx.fillStyle='rgba(0,0,0,0.25)';
   ctx.beginPath(); ctx.ellipse(sx,sy+3,s*0.7,s*0.32,0,0,Math.PI*2); ctx.fill();
 
-  drawUnitSprite(ctx,u,sx,sy,s,isAI);
+  // Divine shield glow
+  if (u.isHero && u.skillCooldowns?.shieldActive>0) {
+    ctx.strokeStyle='rgba(150,210,255,0.7)'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.arc(sx,sy-s*0.3,s*1.5,0,Math.PI*2); ctx.stroke();
+  }
+
+  drawUnitSprite(ctx,u,sx,sy,s,isAI,isNeutral);
 
   if (u.carryGold>0) {
     ctx.fillStyle='#ffd700';
@@ -1084,10 +1439,23 @@ function drawUnit(u) {
     ctx.fillStyle=hpf>0.5?'#4caf50':hpf>0.25?'#ff9800':'#f44336';
     ctx.fillRect(sx-s,sy-s*1.9,s*2*hpf,3);
   }
+
+  // Hero XP bar and level indicator
+  if (u.isHero) {
+    const xpBarY=sy-s*2.2;
+    ctx.fillStyle='#222'; ctx.fillRect(sx-s,xpBarY,s*2,3);
+    const curLvlXp = HERO_XP_THRESH[u.level-1]||0;
+    const nextLvlXp = u.level<HERO_XP_THRESH.length ? HERO_XP_THRESH[u.level] : HERO_XP_THRESH[HERO_XP_THRESH.length-1];
+    const xpPct = nextLvlXp>curLvlXp ? (u.xp-curLvlXp)/(nextLvlXp-curLvlXp) : 1;
+    ctx.fillStyle='#8844ff'; ctx.fillRect(sx-s,xpBarY,s*2*Math.min(1,xpPct),3);
+    ctx.fillStyle='#ffd700'; ctx.font='bold 8px Courier New'; ctx.textAlign='center';
+    ctx.fillText(`L${u.level}`,sx,sy-s*1.6);
+  }
 }
 
-function drawUnitSprite(dc,u,sx,sy,s,isAI) {
-  const color=isAI?tintRed(UDEF[u.type].color):UDEF[u.type].color;
+function drawUnitSprite(dc,u,sx,sy,s,isAI,isNeutral) {
+  const udef=UDEF[u.type];
+  const color=isAI?tintRed(udef.color):udef.color;
   switch(u.type) {
     case 'worker': {
       // Body
@@ -1206,6 +1574,159 @@ function drawUnitSprite(dc,u,sx,sy,s,isAI) {
         s*0.3,0,Math.PI*2); dc.fill();
       break;
     }
+    case 'cavalry': {
+      // Horse + rider
+      dc.fillStyle=isAI?'#7a2a10':'#8b6030';
+      dc.beginPath(); dc.ellipse(sx,sy-s*0.3,s*1.2,s*0.8,u.angle,0,Math.PI*2); dc.fill();
+      dc.strokeStyle='rgba(0,0,0,0.4)'; dc.lineWidth=1; dc.stroke();
+      // Rider body
+      dc.fillStyle=color;
+      dc.beginPath(); dc.arc(sx+Math.cos(u.angle)*s*0.3,sy-s*0.9,s*0.7,0,Math.PI*2); dc.fill();
+      // Helmet
+      dc.fillStyle=isAI?'#8a2020':'#5060c0';
+      dc.beginPath(); dc.arc(sx+Math.cos(u.angle)*s*0.3,sy-s*1.35,s*0.42,Math.PI,0); dc.fill();
+      // Lance
+      dc.strokeStyle=isAI?'#aa2222':'#c8c8e8'; dc.lineWidth=2;
+      const la=u.angle;
+      dc.beginPath();
+      dc.moveTo(sx+Math.cos(la)*s*0.8,sy-s*0.9+Math.sin(la)*s*0.8);
+      dc.lineTo(sx+Math.cos(la)*s*2.2,sy-s*0.9+Math.sin(la)*s*2.2);
+      dc.stroke();
+      break;
+    }
+    case 'catapult': {
+      // Wooden frame
+      dc.fillStyle=isAI?'#4a2010':'#5a4020';
+      dc.fillRect(sx-s*1.1,sy-s*0.4,s*2.2,s*0.7);
+      // Wheels
+      dc.fillStyle='#3a2808';
+      dc.beginPath(); dc.arc(sx-s*0.8,sy+s*0.1,s*0.45,0,Math.PI*2); dc.fill();
+      dc.beginPath(); dc.arc(sx+s*0.8,sy+s*0.1,s*0.45,0,Math.PI*2); dc.fill();
+      dc.strokeStyle='#8b6020'; dc.lineWidth=2;
+      dc.beginPath(); dc.arc(sx-s*0.8,sy+s*0.1,s*0.45,0,Math.PI*2); dc.stroke();
+      dc.beginPath(); dc.arc(sx+s*0.8,sy+s*0.1,s*0.45,0,Math.PI*2); dc.stroke();
+      // Arm
+      const catAngle=u.angle-Math.PI*0.4;
+      dc.strokeStyle=isAI?'#7a2010':'#6a4010'; dc.lineWidth=3;
+      dc.beginPath();
+      dc.moveTo(sx,sy-s*0.1);
+      dc.lineTo(sx+Math.cos(catAngle)*s*1.4,sy-s*0.1+Math.sin(catAngle)*s*1.4);
+      dc.stroke();
+      // Boulder
+      dc.fillStyle='#707068';
+      dc.beginPath(); dc.arc(sx+Math.cos(catAngle)*s*1.4,sy-s*0.1+Math.sin(catAngle)*s*1.4,s*0.32,0,Math.PI*2); dc.fill();
+      break;
+    }
+    case 'priest': {
+      // White robes
+      dc.fillStyle=isAI?'#884444':color;
+      dc.beginPath(); dc.arc(sx,sy-s*0.25,s,0,Math.PI*2); dc.fill();
+      dc.strokeStyle='rgba(200,200,200,0.4)'; dc.lineWidth=1; dc.stroke();
+      // Hood
+      dc.fillStyle=isAI?'#aa5555':'#d8d8b0';
+      dc.beginPath(); dc.arc(sx,sy-s*0.8,s*0.5,Math.PI,0); dc.fill();
+      // Holy symbol (cross)
+      dc.fillStyle=isAI?'#ffaaaa':'#ffd700';
+      dc.fillRect(sx-s*0.08,sy-s*0.7,s*0.16,s*0.48);
+      dc.fillRect(sx-s*0.24,sy-s*0.55,s*0.48,s*0.16);
+      // Staff
+      dc.strokeStyle=isAI?'#884444':'#c8c890'; dc.lineWidth=2;
+      const pa=u.angle;
+      dc.beginPath();
+      dc.moveTo(sx+Math.cos(pa+0.5)*s*0.6,sy-s*0.25+Math.sin(pa+0.5)*s*0.6);
+      dc.lineTo(sx+Math.cos(pa+0.5)*s*1.7,sy-s*0.25+Math.sin(pa+0.5)*s*1.7);
+      dc.stroke();
+      break;
+    }
+    case 'hero': {
+      // Glowing armored hero
+      dc.fillStyle=isAI?'#9a2020':color;
+      dc.beginPath(); dc.arc(sx,sy-s*0.25,s*1.1,0,Math.PI*2); dc.fill();
+      dc.strokeStyle='#ffd700'; dc.lineWidth=2; dc.stroke();
+      // Golden helmet with wings
+      dc.fillStyle=isAI?'#8a2020':'#c8a020';
+      dc.beginPath(); dc.arc(sx,sy-s*0.9,s*0.6,Math.PI,0); dc.fill();
+      dc.fillStyle=isAI?'#cc4444':'#ffd700';
+      dc.fillRect(sx-s*0.55,sy-s*1.08,s*1.1,s*0.2);
+      // Wing marks
+      dc.fillStyle=isAI?'#ff8888':'#ffe88a';
+      dc.beginPath(); dc.moveTo(sx-s*0.5,sy-s*0.88); dc.lineTo(sx-s*0.95,sy-s*1.1); dc.lineTo(sx-s*0.55,sy-s*0.72); dc.closePath(); dc.fill();
+      dc.beginPath(); dc.moveTo(sx+s*0.5,sy-s*0.88); dc.lineTo(sx+s*0.95,sy-s*1.1); dc.lineTo(sx+s*0.55,sy-s*0.72); dc.closePath(); dc.fill();
+      // Glowing sword
+      dc.strokeStyle='rgba(255,215,0,0.9)'; dc.lineWidth=2.5;
+      const ha=u.angle;
+      dc.beginPath();
+      dc.moveTo(sx+Math.cos(ha)*s*0.6,sy-s*0.25+Math.sin(ha)*s*0.6);
+      dc.lineTo(sx+Math.cos(ha)*s*1.8,sy-s*0.25+Math.sin(ha)*s*1.8);
+      dc.stroke();
+      // Golden glow
+      const glow=ctx.createRadialGradient(sx,sy-s*0.4,s*0.3,sx,sy-s*0.4,s*1.3);
+      glow.addColorStop(0,'rgba(255,215,0,0.12)');
+      glow.addColorStop(1,'rgba(255,215,0,0)');
+      dc.fillStyle=glow; dc.beginPath(); dc.arc(sx,sy-s*0.4,s*1.3,0,Math.PI*2); dc.fill();
+      break;
+    }
+    case 'wolf': {
+      // Wolf body
+      dc.fillStyle='#707070';
+      dc.beginPath(); dc.ellipse(sx,sy-s*0.2,s*1.1,s*0.65,u.angle,0,Math.PI*2); dc.fill();
+      dc.strokeStyle='#404040'; dc.lineWidth=1; dc.stroke();
+      // Head
+      dc.fillStyle='#888';
+      const wx2=sx+Math.cos(u.angle)*s*0.9, wy2=sy-s*0.2+Math.sin(u.angle)*s*0.9;
+      dc.beginPath(); dc.arc(wx2,wy2,s*0.5,0,Math.PI*2); dc.fill();
+      // Ears
+      dc.fillStyle='#555';
+      dc.beginPath(); dc.moveTo(wx2+Math.cos(u.angle-0.6)*s*0.4,wy2+Math.sin(u.angle-0.6)*s*0.4);
+      dc.lineTo(wx2+Math.cos(u.angle-0.3)*s*0.72,wy2+Math.sin(u.angle-0.3)*s*0.72);
+      dc.lineTo(wx2+Math.cos(u.angle-0.1)*s*0.4,wy2+Math.sin(u.angle-0.1)*s*0.4);
+      dc.closePath(); dc.fill();
+      // Eyes (red glow)
+      dc.fillStyle='#ff4422';
+      dc.beginPath(); dc.arc(wx2+Math.cos(u.angle+0.22)*s*0.28,wy2+Math.sin(u.angle+0.22)*s*0.28,s*0.1,0,Math.PI*2); dc.fill();
+      dc.beginPath(); dc.arc(wx2+Math.cos(u.angle-0.22)*s*0.28,wy2+Math.sin(u.angle-0.22)*s*0.28,s*0.1,0,Math.PI*2); dc.fill();
+      break;
+    }
+    case 'deer': {
+      // Deer body
+      dc.fillStyle='#b08050';
+      dc.beginPath(); dc.ellipse(sx,sy-s*0.2,s*0.9,s*0.55,u.angle,0,Math.PI*2); dc.fill();
+      dc.strokeStyle='rgba(0,0,0,0.2)'; dc.lineWidth=1; dc.stroke();
+      // Head
+      dc.fillStyle='#c09060';
+      const dhx=sx+Math.cos(u.angle)*s*0.8, dhy=sy-s*0.2+Math.sin(u.angle)*s*0.8;
+      dc.beginPath(); dc.arc(dhx,dhy,s*0.38,0,Math.PI*2); dc.fill();
+      // Antlers (lines)
+      dc.strokeStyle='#7a5030'; dc.lineWidth=1.5;
+      dc.beginPath(); dc.moveTo(dhx,dhy-s*0.38); dc.lineTo(dhx-s*0.3,dhy-s*0.8); dc.lineTo(dhx-s*0.5,dhy-s*0.55); dc.stroke();
+      dc.beginPath(); dc.moveTo(dhx,dhy-s*0.38); dc.lineTo(dhx+s*0.3,dhy-s*0.8); dc.lineTo(dhx+s*0.5,dhy-s*0.55); dc.stroke();
+      break;
+    }
+    case 'treant': {
+      // Bark textured body
+      dc.fillStyle='#3a5020';
+      dc.beginPath(); dc.arc(sx,sy-s*0.3,s*1.05,0,Math.PI*2); dc.fill();
+      dc.strokeStyle='#2a3010'; dc.lineWidth=2; dc.stroke();
+      // Branch arms
+      dc.strokeStyle='#4a6020'; dc.lineWidth=3;
+      dc.beginPath();
+      dc.moveTo(sx-s*0.7,sy-s*0.4); dc.lineTo(sx-s*1.4,sy-s*0.9); dc.stroke();
+      dc.moveTo(sx+s*0.7,sy-s*0.4); dc.lineTo(sx+s*1.4,sy-s*0.9); dc.stroke();
+      // Leaves clusters
+      dc.fillStyle='rgba(56,100,16,0.85)';
+      for (let i=0;i<5;i++) {
+        const la2=i*Math.PI*0.4;
+        dc.beginPath(); dc.arc(sx+Math.cos(la2)*s*0.75,sy-s*0.3+Math.sin(la2)*s*0.75,s*0.5,0,Math.PI*2); dc.fill();
+      }
+      // Eyes (bark cracks)
+      dc.fillStyle='#ffe870';
+      dc.beginPath(); dc.arc(sx-s*0.28,sy-s*0.5,s*0.14,0,Math.PI*2); dc.fill();
+      dc.beginPath(); dc.arc(sx+s*0.28,sy-s*0.5,s*0.14,0,Math.PI*2); dc.fill();
+      dc.fillStyle='#2a1a00';
+      dc.beginPath(); dc.arc(sx-s*0.28,sy-s*0.5,s*0.07,0,Math.PI*2); dc.fill();
+      dc.beginPath(); dc.arc(sx+s*0.28,sy-s*0.5,s*0.07,0,Math.PI*2); dc.fill();
+      break;
+    }
     default: {
       dc.fillStyle=color;
       dc.beginPath(); dc.arc(sx,sy-s*0.25,s,0,Math.PI*2); dc.fill();
@@ -1258,6 +1779,37 @@ function render() {
 
   const units=[...entities].filter(e=>e.isUnit).sort((a,b)=>a.y-b.y);
   for (const u of units) drawUnit(u);
+
+  // Draw projectiles
+  for (const p of projectiles) {
+    const sx=p.x-camera.x, sy=p.y-camera.y;
+    const tx2=p.tx-camera.x, ty2=p.ty-camera.y;
+    // Trail
+    ctx.strokeStyle=p.color; ctx.lineWidth=2; ctx.globalAlpha=0.6;
+    ctx.beginPath(); ctx.moveTo(sx,sy);
+    const tdx=tx2-sx, tdy=ty2-sy, tlen=Math.sqrt(tdx*tdx+tdy*tdy)||1;
+    ctx.lineTo(sx-tdx/tlen*8,sy-tdy/tlen*8);
+    ctx.stroke();
+    ctx.globalAlpha=1;
+    // Projectile dot
+    ctx.fillStyle=p.color;
+    ctx.beginPath(); ctx.arc(sx,sy, p.aoe>0 ? 5 : 3, 0,Math.PI*2); ctx.fill();
+    // AOE glow
+    if (p.aoe>0) {
+      ctx.fillStyle='rgba(255,100,0,0.15)';
+      ctx.beginPath(); ctx.arc(sx,sy,p.aoe*TS*0.4,0,Math.PI*2); ctx.fill();
+    }
+  }
+
+  // Rally mode cursor
+  if (rallyMode) {
+    const mx=mouse.x, my=mouse.y;
+    ctx.strokeStyle='#00ff88'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(mx,my-12); ctx.lineTo(mx,my+12); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(mx-12,my); ctx.lineTo(mx+12,my); ctx.stroke();
+    ctx.fillStyle='#00ff88'; ctx.font='11px Courier New'; ctx.textAlign='center';
+    ctx.fillText('Set Rally Point',mx,my-16);
+  }
 
   for (const n of notes) {
     const {x:sx,y:sy}=w2s(n.x,n.y);
@@ -1377,6 +1929,52 @@ function updateUI() {
   document.getElementById('wood').textContent=Math.floor(resources.wood);
   document.getElementById('pop').textContent=`${pop.cur}/${pop.max}`;
   renderSelectionPanel();
+  renderBuildPanel();
+}
+
+function renderBuildPanel() {
+  const sel=[...selectedIds].map(id=>getEntity(id)).filter(Boolean);
+  const canBuild=sel.some(e=>e&&e.isUnit&&e.canBuild&&e.owner==='player');
+  const panel=document.getElementById('buildPanel');
+  if (!panel) return;
+
+  if (!canBuild) {
+    panel.classList.add('hidden');
+    lastBuildPanelHash='';
+    return;
+  }
+  panel.classList.remove('hidden');
+
+  // Only rebuild if affordability changed (gold/wood changes)
+  const newHash=`${resources.gold}|${resources.wood}`;
+  if (newHash===lastBuildPanelHash) return;
+  lastBuildPanelHash=newHash;
+
+  const defs=[
+    {type:'barracks',       icon:'⚔️',  label:'Barracks'},
+    {type:'farm',           icon:'🌾',  label:'Farm'},
+    {type:'lumber_mill',    icon:'🪵',  label:'Lumber'},
+    {type:'tower',          icon:'🗼',  label:'Tower'},
+    {type:'blacksmith',     icon:'🔨',  label:'Blacksmith'},
+    {type:'mage_tower',     icon:'✨',  label:'Mage Twr'},
+    {type:'stable',         icon:'🐴',  label:'Stable'},
+    {type:'siege_workshop', icon:'🪨',  label:'Siege Wksp'},
+    {type:'temple',         icon:'⛩️', label:'Temple'},
+    {type:'tavern',         icon:'🍺',  label:'Tavern'},
+  ];
+  const btns=document.getElementById('buildPanelButtons');
+  if (!btns) return;
+  let html='';
+  for (const d of defs) {
+    const bdef=BDEF[d.type];
+    const canAfford=resources.gold>=bdef.cost.gold&&resources.wood>=bdef.cost.wood;
+    html+=`<button class="build-panel-btn${canAfford?'':' disabled'}" onclick="clickBuildMode('${d.type}')" title="${bdef.name}: ${bdef.cost.gold}💰 ${bdef.cost.wood}🪵">
+      <span class="bpb-icon">${d.icon}</span>
+      <span class="bpb-label">${d.label}</span>
+      <span class="bpb-cost">${bdef.cost.gold}💰 ${bdef.cost.wood}🪵</span>
+    </button>`;
+  }
+  btns.innerHTML=html;
 }
 
 function renderSelectionPanel() {
@@ -1385,6 +1983,9 @@ function renderSelectionPanel() {
   const sel=[...selectedIds].map(id=>getEntity(id)).filter(Boolean);
 
   if (!sel.length) {
+    const newHash='empty';
+    if (newHash===lastSelPanelHash) return;
+    lastSelPanelHash=newHash;
     info.innerHTML='<div class="no-selection">Select units or buildings<br><small>Left-click to select · Drag to box-select</small></div>';
     actions.innerHTML='';
     drawPortrait(null);
@@ -1398,76 +1999,74 @@ function renderSelectionPanel() {
       const def=UDEF[e.type];
       const hpf=e.hp/e.maxHp;
       const hpColor=hpf>0.5?'#4caf50':hpf>0.25?'#ff9800':'#f44336';
-      info.innerHTML=`
-        <div class="entity-name">${def.name}${e.owner==='ai'?' [AI]':''}</div>
-        <div class="entity-hpbar"><div class="entity-hpbar-fill" style="width:${hpf*100}%;background:${hpColor}"></div></div>
-        <div class="entity-stat">HP ${Math.ceil(e.hp)}/${e.maxHp}</div>
-        <div class="entity-stat">State: ${e.state.replace(/_/g,' ')}</div>
-        ${e.carryGold?`<div class="entity-stat">Carrying: ${e.carryGold} \u{1F4B0}</div>`:''}
-        ${e.carryWood?`<div class="entity-stat">Carrying: ${e.carryWood} \u{1FAB5}</div>`:''}
-      `;
-      actions.innerHTML=(e.owner==='player'&&e.canBuild)?buildButtons():'';
+      const newHash=`${e.id}|${Math.ceil(e.hp)}|${e.state}|${e.carryGold}|${e.carryWood}|${e.isHero?e.level+':'+e.xp:''}`;
+      if (newHash!==lastSelPanelHash) {
+        lastSelPanelHash=newHash;
+        info.innerHTML=`
+          <div class="entity-name">${def.name}${e.owner==='ai'?' [AI]':e.owner==='neutral'?' [Neutral]':''}</div>
+          <div class="entity-hpbar"><div class="entity-hpbar-fill" style="width:${hpf*100}%;background:${hpColor}"></div></div>
+          <div class="entity-stat">HP ${Math.ceil(e.hp)}/${e.maxHp} | Armor: ${e.armor||0}</div>
+          ${e.isHero?`<div class="entity-stat">Lv ${e.level} · XP ${e.xp} | ATK ${e.damage}</div>`:''}
+          <div class="entity-stat">State: ${e.state.replace(/_/g,' ')}</div>
+          ${e.carryGold?`<div class="entity-stat">Carrying: ${e.carryGold} 💰</div>`:''}
+          ${e.carryWood?`<div class="entity-stat">Carrying: ${e.carryWood} 🪵</div>`:''}
+        `;
+        // Only show train buttons (not build – that's in the side panel now)
+        actions.innerHTML='';
+      }
     } else {
       const def=BDEF[e.type];
       const hpf=e.hp/e.maxHp;
       const hpColor=hpf>0.5?'#4caf50':hpf>0.25?'#ff9800':'#f44336';
-      info.innerHTML=`
-        <div class="entity-name">${def.name}${e.owner==='ai'?' [AI]':''}</div>
-        <div class="entity-hpbar"><div class="entity-hpbar-fill" style="width:${hpf*100}%;background:${hpColor}"></div></div>
-        <div class="entity-stat">HP ${Math.ceil(e.hp)}/${e.maxHp}</div>
-        <div class="entity-stat">${e.state==='construction'?`Building… ${(e.buildProg*100)|0}%`:e.state==='training'&&e.trainQueue.length?`Training: ${UDEF[e.trainQueue[0]].name}`:'Ready'}</div>
-        ${e.trainQueue&&e.trainQueue.length>1?`<div class="entity-stat">Queue: ${e.trainQueue.length}</div>`:''}
-      `;
-      if (e.owner==='player'&&def.trains&&def.trains.length&&e.state!=='construction') {
-        actions.innerHTML=trainButtons(e);
-      } else {
-        actions.innerHTML='';
+      const trainName=e.state==='training'&&e.trainQueue.length?UDEF[e.trainQueue[0]].name:'';
+      const newHash=`${e.id}|${Math.ceil(e.hp)}|${e.state}|${trainName}|${e.trainQueue.length}|${resources.gold}|${pop.cur}`;
+      if (newHash!==lastSelPanelHash) {
+        lastSelPanelHash=newHash;
+        info.innerHTML=`
+          <div class="entity-name">${def.name}${e.owner==='ai'?' [AI]':''}</div>
+          <div class="entity-hpbar"><div class="entity-hpbar-fill" style="width:${hpf*100}%;background:${hpColor}"></div></div>
+          <div class="entity-stat">HP ${Math.ceil(e.hp)}/${e.maxHp}</div>
+          <div class="entity-stat">${e.state==='construction'?`Building… ${(e.buildProg*100)|0}%`:trainName?`Training: ${trainName}`:'Ready'}</div>
+          ${e.trainQueue&&e.trainQueue.length>1?`<div class="entity-stat">Queue: ${e.trainQueue.length}</div>`:''}
+        `;
+        if (e.owner==='player'&&def.trains&&def.trains.length&&e.state!=='construction') {
+          actions.innerHTML=trainButtons(e);
+        } else {
+          actions.innerHTML='';
+        }
       }
     }
   } else {
     drawPortrait(null);
     const uCount=sel.filter(e=>e.isUnit).length;
-    info.innerHTML=`<div class="entity-name">${sel.length} selected</div><div class="entity-stat">${uCount} unit${uCount!==1?'s':''}</div>`;
-    const canBuildAny=sel.some(e=>e.isUnit&&e.canBuild&&e.owner==='player');
-    actions.innerHTML=canBuildAny?buildButtons():'';
+    const newHash=`multi:${sel.length}`;
+    if (newHash!==lastSelPanelHash) {
+      lastSelPanelHash=newHash;
+      info.innerHTML=`<div class="entity-name">${sel.length} selected</div><div class="entity-stat">${uCount} unit${uCount!==1?'s':''}</div>`;
+      actions.innerHTML='';
+    }
   }
-}
-
-function buildButtons() {
-  const defs=[
-    {type:'barracks',    icon:'\u2694\ufe0f',  label:'Barracks'},
-    {type:'farm',        icon:'\ud83c\udf3e',  label:'Farm'},
-    {type:'lumber_mill', icon:'\ud83e\udeb5',  label:'Lumber Mill'},
-    {type:'tower',       icon:'\ud83d\uddfc',  label:'Watch Tower'},
-    {type:'blacksmith',  icon:'\ud83d\udd28',  label:'Blacksmith'},
-    {type:'mage_tower',  icon:'\u2728',  label:'Mage Tower'},
-  ];
-  let html='<div class="action-group"><div class="action-label">Build:</div>';
-  for (const d of defs) {
-    const bdef=BDEF[d.type];
-    const canAfford=resources.gold>=bdef.cost.gold&&resources.wood>=bdef.cost.wood;
-    html+=`<button class="action-btn${canAfford?'':' disabled'}" onclick="clickBuildMode('${d.type}')" title="${bdef.name}: ${bdef.cost.gold}\u{1F4B0} ${bdef.cost.wood}\u{1FAB5}">
-      ${d.icon} ${d.label}<small>${bdef.cost.gold}\u{1F4B0} ${bdef.cost.wood}\u{1FAB5}</small>
-    </button>`;
-  }
-  return html+'</div>';
 }
 
 function trainButtons(building) {
   const def=BDEF[building.type];
-  const icons={worker:'\ud83d\udc77',soldier:'\u2694\ufe0f',archer:'\ud83c\udff9',knight:'\ud83d\udee1\ufe0f',mage:'\ud83e\uddd9'};
+  const icons={worker:'👷',soldier:'⚔️',archer:'🏹',knight:'🛡️',mage:'🧙',cavalry:'🐴',catapult:'🪨',priest:'✝️',hero:'⭐'};
   let html='<div class="action-group"><div class="action-label">Train:</div>';
   for (const utype of def.trains) {
     const udef=UDEF[utype];
     const canAfford=resources.gold>=udef.cost.gold&&resources.wood>=udef.cost.wood&&pop.cur<pop.max;
-    html+=`<button class="action-btn${canAfford?'':' disabled'}" onclick="clickTrain(${building.id},'${utype}')" title="${udef.name}: ${udef.cost.gold}\u{1F4B0} ${udef.cost.wood}\u{1FAB5}">
-      ${icons[utype]||'\ud83d\udc64'} ${udef.name}<small>${udef.cost.gold}\u{1F4B0} ${udef.cost.wood}\u{1FAB5}</small>
+    html+=`<button class="action-btn${canAfford?'':' disabled'}" onclick="clickTrain(${building.id},'${utype}')" title="${udef.name}: ${udef.cost.gold}💰 ${udef.cost.wood}🪵">
+      ${icons[utype]||'👤'} ${udef.name}<small>${udef.cost.gold}💰 ${udef.cost.wood}🪵</small>
     </button>`;
   }
+  // Rally point button for training buildings
+  html+=`<button class="action-btn" onclick="clickSetRally(${building.id})" title="Set rally point for newly trained units">📍 Set Rally</button>`;
   return html+'</div>';
 }
 
-function clickBuildMode(type) { buildMode={type}; }
+function clickBuildMode(type) { buildMode={type}; rallyMode=null; }
+
+function clickSetRally(bId) { rallyMode=bId; buildMode=null; }
 
 function clickTrain(bId,utype) {
   const b=getEntity(bId); if (!b) return;
@@ -1599,8 +2198,19 @@ function onMouseDown(e) {
   if (e.clientY>window.innerHeight-130) return;
   // Ignore clicks in top HUD
   if (e.clientY<44) return;
+  // Ignore clicks in build panel (right side)
+  const bp=document.getElementById('buildPanel');
+  if (bp&&!bp.classList.contains('hidden')&&e.clientX>window.innerWidth-150) return;
 
   if (e.button===0) {
+    // Rally mode: left-click sets rally
+    if (rallyMode) {
+      const b=getEntity(rallyMode);
+      if (b) { b.rallyX=mouse.wx; b.rallyY=mouse.wy; addNote('📍 Rally set!',mouse.wx,mouse.wy,'#00ff88'); }
+      rallyMode=null;
+      return;
+    }
+
     mouse.down=true; mouse.downX=mouse.x; mouse.downY=mouse.y;
     selBox.x1=mouse.x; selBox.y1=mouse.y; selBox.x2=mouse.x; selBox.y2=mouse.y;
 
@@ -1622,9 +2232,11 @@ function onMouseDown(e) {
         if (u&&u.isUnit&&u.canBuild) cmdBuild(u,bld.id);
       }
       buildMode=null;
+      lastBuildPanelHash=''; // force rebuild to update afford state
       return;
     }
   } else if (e.button===2) {
+    if (rallyMode) { rallyMode=null; return; }
     if (buildMode) { buildMode=null; return; }
     issueRightClick(mouse.wx,mouse.wy,e.shiftKey);
   }
@@ -1644,7 +2256,7 @@ function onMouseMove(e) {
 
 function onMouseUp(e) {
   if (e.button===0) {
-    if (buildMode) { mouse.down=false; selBox.active=false; return; }
+    if (buildMode||rallyMode) { mouse.down=false; selBox.active=false; return; }
     if (selBox.active) {
       const wx1=Math.min(selBox.x1,selBox.x2)+camera.x;
       const wy1=Math.min(selBox.y1,selBox.y2)+camera.y;
@@ -1652,12 +2264,16 @@ function onMouseUp(e) {
       const wy2=Math.max(selBox.y1,selBox.y2)+camera.y;
       if (!e.shiftKey) selectedIds.clear();
       for (const en of entities)
-        if (en.isUnit&&en.owner==='player'&&en.x>=wx1&&en.x<=wx2&&en.y>=wy1&&en.y<=wy2)
+        if (en.isUnit&&(en.owner==='player'||en.owner==='neutral')&&en.x>=wx1&&en.x<=wx2&&en.y>=wy1&&en.y<=wy2)
           selectedIds.add(en.id);
     } else {
       const wx=mouse.downX+camera.x, wy=mouse.downY+camera.y;
       // Only select if not in panel areas
       if (mouse.downY>window.innerHeight-130||mouse.downY<44) {
+        mouse.down=false; selBox.active=false; return;
+      }
+      const bp=document.getElementById('buildPanel');
+      if (bp&&!bp.classList.contains('hidden')&&mouse.downX>window.innerWidth-150) {
         mouse.down=false; selBox.active=false; return;
       }
       if (!e.shiftKey) selectedIds.clear();
@@ -1674,6 +2290,7 @@ function onMouseUp(e) {
         if (e.shiftKey&&selectedIds.has(hit.id)) selectedIds.delete(hit.id);
         else selectedIds.add(hit.id);
       }
+      lastSelPanelHash=''; // force UI update on click
     }
     mouse.down=false; selBox.active=false;
   }
@@ -1697,7 +2314,12 @@ function issueRightClick(wx,wy,shift) {
 
   for (const u of units) {
     if (tgtEntity) {
-      u.target=tgtEntity.id; u.state='attacking'; u.path=[];
+      if (tgtEntity.owner===u.owner) {
+        // Right-click own building = send to repair (build)
+        if (!tgtEntity.isUnit && tgtEntity.hp<tgtEntity.maxHp && u.canBuild) { cmdBuild(u,tgtEntity.id); }
+      } else {
+        u.target=tgtEntity.id; u.state='attacking'; u.path=[];
+      }
     } else if ((tileT===T_GOLD||tileT===T_TREE)&&u.canGather) {
       cmdGather(u,tx,ty);
     } else {
@@ -1710,20 +2332,36 @@ function issueRightClick(wx,wy,shift) {
 function onKeyDown(e) {
   keys[e.code]=true;
   if (gamePhase!=='playing') return;
-  if (e.code==='Escape') { buildMode=null; selectedIds.clear(); }
+  if (e.code==='Escape') { buildMode=null; rallyMode=null; selectedIds.clear(); lastSelPanelHash=''; }
   if (e.code==='KeyA'&&!e.ctrlKey&&!e.metaKey) {
     selectedIds.clear();
     for (const en of entities) {
-      if (!en.isUnit||en.owner==='ai') continue;
+      if (!en.isUnit||en.owner!=='player') continue;
       const {x:sx,y:sy}=w2s(en.x,en.y);
       if (sx>=0&&sx<=gameW&&sy>=44&&sy<=gameH-130) selectedIds.add(en.id);
     }
+    lastSelPanelHash='';
   }
   if (e.code==='KeyH') {
     const hall=entities.find(e=>!e.isUnit&&e.type==='main_hall'&&(e.owner||'player')==='player');
     if (hall) {
       camera.x=hall.x-gameW/2+BDEF.main_hall.size*TS/2;
       camera.y=hall.y-(gameH-44-130)/2+BDEF.main_hall.size*TS/2;
+    }
+  }
+  // P = set patrol for selected units
+  if (e.code==='KeyP') {
+    const units=[...selectedIds].map(id=>getEntity(id)).filter(e=>e&&e.isUnit&&e.owner==='player');
+    for (const u of units) {
+      if (u.state==='patrolling') { u.state='idle'; u.patrolA=null; u.patrolB=null; }
+      else if (!u.patrolA) {
+        u.patrolA={x:u.x,y:u.y};
+        addNote('Patrol A set',u.x,u.y,'#88aaff');
+      } else {
+        u.patrolB={x:u.x,y:u.y};
+        u.state='patrolling'; u.patrolTarget=1;
+        addNote('Patrolling!',u.x,u.y,'#88aaff');
+      }
     }
   }
 }
@@ -1782,12 +2420,65 @@ function startGameFromMenu() {
   const mapSizeEl=document.querySelector('input[name="mapSize"]:checked');
   const aiPlayersEl=document.querySelector('input[name="aiPlayers"]:checked');
   const mapThemeEl=document.querySelector('input[name="mapTheme"]:checked');
+  const startArmyEl=document.querySelector('input[name="startArmy"]:checked');
   const config={
     mapSize:  mapSizeEl  ? mapSizeEl.value  : 'medium',
     aiCount:  aiPlayersEl? parseInt(aiPlayersEl.value) : 1,
     mapTheme: mapThemeEl ? mapThemeEl.value : 'random',
+    startArmy:startArmyEl? startArmyEl.value : 'none',
   };
   startGame(config);
+}
+
+function spawnNeutrals() {
+  // Find forest areas (away from both bases) to place packs
+  const minDist=15; // tiles away from corners
+  const spawnPoints=[];
+  for (let attempts=0;attempts<200;attempts++) {
+    const tx=5+Math.floor(Math.random()*(MW-10));
+    const ty=5+Math.floor(Math.random()*(MH-10));
+    if (!walkable(tx,ty)) continue;
+    // Keep away from player start (9,9) and AI corner
+    const aisx=Math.max(5,MW-22), aisy=Math.max(5,MH-22);
+    if (d2(tx*TS,ty*TS,9*TS,9*TS)<minDist*TS) continue;
+    if (d2(tx*TS,ty*TS,aisx*TS,aisy*TS)<minDist*TS) continue;
+    spawnPoints.push({tx,ty});
+    if (spawnPoints.length>=8) break;
+  }
+
+  // Wolf packs (2-4 wolves each, near forests)
+  const wolfSpawns=Math.min(3,Math.floor(spawnPoints.length/2));
+  for (let i=0;i<wolfSpawns;i++) {
+    const sp=spawnPoints[i];
+    const count=2+Math.floor(Math.random()*3);
+    for (let j=0;j<count;j++) {
+      makeUnit('wolf',(sp.tx+j-1)*TS+TS/2,(sp.ty+(j%2))*TS+TS/2,'neutral');
+    }
+  }
+
+  // Deer (1-3 each, in open areas)
+  const deerSpawns=Math.min(2,spawnPoints.length-wolfSpawns);
+  for (let i=wolfSpawns;i<wolfSpawns+deerSpawns;i++) {
+    const sp=spawnPoints[i];
+    const count=1+Math.floor(Math.random()*3);
+    for (let j=0;j<count;j++) {
+      makeUnit('deer',(sp.tx+j)*TS+TS/2,(sp.ty)*TS+TS/2,'neutral');
+    }
+  }
+
+  // Treant (rare, 1-2 total, in dense forests)
+  if (spawnPoints.length>wolfSpawns+deerSpawns) {
+    const sp=spawnPoints[wolfSpawns+deerSpawns];
+    // Find a tree tile nearby
+    for (let r=0;r<5;r++) {
+      const ftx=sp.tx+Math.round((Math.random()-0.5)*4);
+      const fty=sp.ty+Math.round((Math.random()-0.5)*4);
+      if (ftx>=0&&fty>=0&&ftx<MW&&fty<MH&&walkable(ftx,fty)) {
+        makeUnit('treant',ftx*TS+TS/2,fty*TS+TS/2,'neutral');
+        break;
+      }
+    }
+  }
 }
 
 function startGame(config) {
@@ -1802,16 +2493,20 @@ function startGame(config) {
   entities=[];
   selectedIds.clear();
   buildMode=null;
+  rallyMode=null;
   frame=0;
   resources={ gold:200, wood:150 };
   pop={ cur:0, max:10 };
   notes=[];
+  projectiles=[];
   eid=0;
   aiResources={ gold:300, wood:200 };
   aiPop={ cur:0, max:10 };
   aiState='gathering';
   aiFrame=0;
   aiBuildAttempted=false;
+  lastBuildPanelHash='';
+  lastSelPanelHash='';
   gamePhase='playing';
 
   generateMap(config.mapTheme);
@@ -1822,11 +2517,27 @@ function startGame(config) {
   makeUnit('worker',13*TS+TS/2,14*TS,  'player');
   makeUnit('worker',14*TS+TS/2,14*TS,  'player');
 
+  // Starting army option
+  const army=config.startArmy||'none';
+  if (army==='small') {
+    makeUnit('soldier',15*TS,12*TS,'player');
+    makeUnit('soldier',16*TS,12*TS,'player');
+    makeUnit('archer', 17*TS,12*TS,'player');
+  } else if (army==='large') {
+    for (let i=0;i<3;i++) makeUnit('knight',(15+i)*TS,11*TS,'player');
+    for (let i=0;i<3;i++) makeUnit('soldier',(15+i)*TS,13*TS,'player');
+    makeUnit('archer',18*TS,11*TS,'player');
+    makeUnit('archer',18*TS,13*TS,'player');
+  }
+
   // AI start (bottom-right corner)
   const aisx=Math.max(5,MW-22), aisy=Math.max(5,MH-22);
   makeBuilding('main_hall',aisx,aisy,true,'ai');
   makeUnit('worker',(aisx+4)*TS,(aisy+3)*TS,'ai');
   makeUnit('worker',(aisx+5)*TS,(aisy+3)*TS,'ai');
+
+  // Spawn neutral creatures in wilderness
+  spawnNeutrals();
 
   // Center camera on player hall
   camera.x=clamp(9*TS-gameW/2+BDEF.main_hall.size*TS/2, 0, Math.max(0,MW*TS-gameW));
@@ -1862,6 +2573,8 @@ function gameLoop(ts) {
   for (let i=entities.length-1;i>=0;i--) {
     if (entities[i].hp<=0) removeEntity(entities[i].id);
   }
+
+  updateProjectiles();
 
   // Notifications
   for (let i=notes.length-1;i>=0;i--) {

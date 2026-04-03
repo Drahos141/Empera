@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Empera Unit Tests</title>
+  <style>
+    body { font-family: 'Courier New', monospace; background: #0a0a14; color: #d4c89a; padding: 20px; }
+    h1   { color: #e8c84a; letter-spacing: 3px; margin-bottom: 20px; }
+    #results div { padding: 3px 0; font-size: 13px; }
+    .pass { color: #88ff88; }
+    .fail { color: #ff6666; }
+    #summary { margin-top: 20px; font-size: 15px; font-weight: bold; border-top: 1px solid #3a3a5a; padding-top: 12px; }
+  </style>
+</head>
+<body>
+<h1>⚔️ Empera Unit Tests</h1>
+<div id="results"></div>
+<div id="summary"></div>
+<script>
+'use strict';
+
+let passed = 0, failed = 0;
+
+function test(name, fn) {
+  try {
+    fn();
+    log(name, true);
+    passed++;
+  } catch(e) {
+    log(name, false, e.message);
+    failed++;
+  }
+}
+
+function log(name, ok, msg) {
+  const div = document.createElement('div');
+  div.className = ok ? 'pass' : 'fail';
+  div.textContent = (ok ? '\u2713 ' : '\u2717 ') + name + (msg ? ': ' + msg : '');
+  document.getElementById('results').appendChild(div);
+}
+
+function expect(val) {
+  return {
+    toBe:           exp  => { if (val !== exp)                              throw new Error(`Expected ${JSON.stringify(exp)}, got ${JSON.stringify(val)}`); },
+    toEqual:        exp  => { if (JSON.stringify(val)!==JSON.stringify(exp)) throw new Error(`Expected ${JSON.stringify(exp)}, got ${JSON.stringify(val)}`); },
+    toBeTruthy:     ()   => { if (!val)  throw new Error(`Expected truthy, got ${val}`); },
+    toBeFalsy:      ()   => { if (val)   throw new Error(`Expected falsy, got ${val}`); },
+    toBeGreaterThan: n   => { if (val<=n) throw new Error(`Expected > ${n}, got ${val}`); },
+    toBeLessThan:    n   => { if (val>=n) throw new Error(`Expected < ${n}, got ${val}`); },
+    toBeNull:        ()  => { if (val!==null) throw new Error(`Expected null, got ${val}`); },
+  };
+}
+
+// ── Mock the minimal game environment ──
+const TS = 48;
+let MW = 80, MH = 60;
+const T_GRASS=0, T_TREE=1, T_GOLD=2, T_WATER=3, T_ROCK=4, T_STUMP=5, T_GOLD_EMPTY=6;
+const map = Array.from({length:MH}, () => new Uint8Array(MW));
+const entities = [];
+
+function walkable(tx,ty) {
+  if (tx<0||ty<0||tx>=MW||ty>=MH) return false;
+  const t = map[ty][tx];
+  return t===T_GRASS || t===T_STUMP || t===T_GOLD_EMPTY;
+}
+
+function d2(ax,ay,bx,by) { const dx=ax-bx,dy=ay-by; return Math.sqrt(dx*dx+dy*dy); }
+const clamp = (v,lo,hi) => Math.max(lo, Math.min(hi, v));
+const tk    = (x,y) => `${x},${y}`;
+const w2t   = (wx,wy) => ({ tx: Math.floor(wx/TS), ty: Math.floor(wy/TS) });
+const t2w   = (tx,ty) => ({ x: tx*TS + TS/2, y: ty*TS + TS/2 });
+
+function tileOccupied(tx,ty) {
+  for (const e of entities) {
+    if (e.isUnit) continue;
+    const s=e.size||1;
+    const ex=Math.floor(e.x/TS), ey=Math.floor(e.y/TS);
+    if (tx>=ex&&tx<ex+s&&ty>=ey&&ty<ey+s) return true;
+  }
+  return false;
+}
+
+// ── Tests ──
+
+test('walkable returns true for grass', () => {
+  map[0][0] = T_GRASS;
+  expect(walkable(0,0)).toBeTruthy();
+});
+
+test('walkable returns false for tree', () => {
+  map[0][1] = T_TREE;
+  expect(walkable(0,1)).toBeFalsy();
+});
+
+test('walkable returns false for water', () => {
+  map[1][0] = T_WATER;
+  expect(walkable(0,1)).toBeFalsy();
+});
+
+test('walkable returns false for rock', () => {
+  map[2][0] = T_ROCK;
+  expect(walkable(0,2)).toBeFalsy();
+});
+
+test('walkable returns false out of bounds - negative x', () => {
+  expect(walkable(-1,0)).toBeFalsy();
+});
+
+test('walkable returns false out of bounds - negative y', () => {
+  expect(walkable(0,-1)).toBeFalsy();
+});
+
+test('walkable returns false out of bounds - x >= MW', () => {
+  expect(walkable(MW,0)).toBeFalsy();
+});
+
+test('walkable returns false out of bounds - y >= MH', () => {
+  expect(walkable(0,MH)).toBeFalsy();
+});
+
+test('walkable returns true for stump', () => {
+  map[2][2] = T_STUMP;
+  expect(walkable(2,2)).toBeTruthy();
+});
+
+test('walkable returns true for empty gold mine', () => {
+  map[3][3] = T_GOLD_EMPTY;
+  expect(walkable(3,3)).toBeTruthy();
+});
+
+test('walkable returns false for gold tile (resource, not walkable)', () => {
+  map[4][4] = T_GOLD;
+  expect(walkable(4,4)).toBeFalsy();
+});
+
+test('d2 distance - 3-4-5 triangle', () => {
+  expect(d2(0,0,3,4)).toBe(5);
+});
+
+test('d2 distance - same point is zero', () => {
+  expect(d2(0,0,0,0)).toBe(0);
+});
+
+test('d2 distance - horizontal', () => {
+  expect(d2(0,0,6,0)).toBe(6);
+});
+
+test('d2 distance - vertical', () => {
+  expect(d2(0,0,0,8)).toBe(8);
+});
+
+test('d2 distance is symmetric', () => {
+  const a = d2(3,7,10,2);
+  const b = d2(10,2,3,7);
+  expect(Math.abs(a-b)<0.0001).toBeTruthy();
+});
+
+test('clamp - value within range', () => {
+  expect(clamp(5,0,10)).toBe(5);
+});
+
+test('clamp - value below min', () => {
+  expect(clamp(-1,0,10)).toBe(0);
+});
+
+test('clamp - value above max', () => {
+  expect(clamp(15,0,10)).toBe(10);
+});
+
+test('clamp - value equals min', () => {
+  expect(clamp(0,0,10)).toBe(0);
+});
+
+test('clamp - value equals max', () => {
+  expect(clamp(10,0,10)).toBe(10);
+});
+
+test('w2t converts origin to tile 0,0', () => {
+  const r = w2t(0,0);
+  expect(r.tx).toBe(0);
+  expect(r.ty).toBe(0);
+});
+
+test('w2t converts world coords to tile', () => {
+  const r = w2t(TS*3+10, TS*2+5);
+  expect(r.tx).toBe(3);
+  expect(r.ty).toBe(2);
+});
+
+test('w2t converts tile boundary correctly', () => {
+  const r = w2t(TS-1, TS-1);
+  expect(r.tx).toBe(0);
+  expect(r.ty).toBe(0);
+});
+
+test('w2t at exact tile boundary', () => {
+  const r = w2t(TS, TS);
+  expect(r.tx).toBe(1);
+  expect(r.ty).toBe(1);
+});
+
+test('t2w converts tile to world center', () => {
+  const r = t2w(0,0);
+  expect(r.x).toBe(TS/2);
+  expect(r.y).toBe(TS/2);
+});
+
+test('t2w converts tile 3,2 to world', () => {
+  const r = t2w(3,2);
+  expect(r.x).toBe(3*TS + TS/2);
+  expect(r.y).toBe(2*TS + TS/2);
+});
+
+test('tile key generation basic', () => {
+  expect(tk(3,7)).toBe('3,7');
+});
+
+test('tile key generation with zeros', () => {
+  expect(tk(0,0)).toBe('0,0');
+});
+
+test('tile key generation large numbers', () => {
+  expect(tk(79,59)).toBe('79,59');
+});
+
+test('tileOccupied returns false when no buildings', () => {
+  entities.length = 0;
+  expect(tileOccupied(5,5)).toBeFalsy();
+});
+
+test('tileOccupied returns true when building present', () => {
+  entities.length = 0;
+  entities.push({ isUnit:false, x:5*TS, y:5*TS, size:2 });
+  expect(tileOccupied(5,5)).toBeTruthy();
+  expect(tileOccupied(6,5)).toBeTruthy();
+  expect(tileOccupied(7,5)).toBeFalsy();
+  entities.length = 0;
+});
+
+test('clamp works with float values', () => {
+  expect(clamp(3.14, 0, 10)).toBe(3.14);
+  expect(clamp(-0.5, 0, 1)).toBe(0);
+  expect(clamp(1.5, 0, 1)).toBe(1);
+});
+
+// Summary
+const summary = document.getElementById('summary');
+const total = passed + failed;
+summary.style.color = failed === 0 ? '#88ff88' : '#ff9900';
+summary.textContent = `Results: ${passed}/${total} passed` + (failed>0?` · ${failed} failed`:'');
+</script>
+</body>
+</html>

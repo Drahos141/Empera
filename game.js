@@ -413,8 +413,8 @@ function removeEntity(id, killerUnit) {
   if (e.isUnit) {
     if (e.owner==='ai') aiPop.cur=Math.max(0,aiPop.cur-1);
     else if (e.owner==='player') pop.cur=Math.max(0,pop.cur-1);
-    // Award XP to killer hero
-    if (killerUnit && killerUnit.isHero && killerUnit.owner!==e.owner) {
+    // Award XP to killer hero (only player/AI heroes earn XP, not neutral creatures)
+    if (killerUnit && killerUnit.isHero && killerUnit.owner!==e.owner && killerUnit.owner!=='neutral') {
       const xpGain = XP_REWARD[e.type] || 20;
       grantHeroXP(killerUnit, xpGain);
     }
@@ -528,16 +528,18 @@ function followPath(unit) {
 }
 
 function dealDamage(attacker, target, dmg) {
+  // Armor reduces damage; minimum 1 ensures even heavy armor can be overcome
   const actual = Math.max(1, dmg - (target.armor||0));
   target.hp -= actual;
   addNote(`-${actual}`, target.x, target.y, '#ff6666');
-  return actual;
 }
 
-function spawnProjectile(fromX, fromY, target, speed, color, damage, owner, aoe) {
+function spawnProjectile(fromX, fromY, target, speed, color, damage, attacker, aoe) {
   const tx = target.isUnit ? target.x : target.x + (BDEF[target.type]?.size||1)*TS/2;
   const ty = target.isUnit ? target.y : target.y + (BDEF[target.type]?.size||1)*TS/2;
-  projectiles.push({ x:fromX, y:fromY, tx, ty, speed, color, damage, owner, targetId:target.id, aoe:aoe||0, life:0 });
+  projectiles.push({ x:fromX, y:fromY, tx, ty, speed, color, damage,
+    attacker, sourceOwner: attacker.owner||'player',
+    targetId:target.id, aoe:aoe||0, life:0 });
 }
 
 function updateUnit(unit) {
@@ -839,7 +841,7 @@ function updateUnit(unit) {
           } else {
             // Shield check for target hero
             if (!(tgt.isHero && tgt.skillCooldowns?.shieldActive>0)) {
-              const actual = dealDamage(unit, tgt, unit.damage);
+              dealDamage(unit, tgt, unit.damage);
               if (tgt.hp<=0) { removeEntity(tgt.id, unit); unit.state='idle'; unit.target=null; }
             }
           }
@@ -928,7 +930,7 @@ function updateBuilding(b) {
       }
       if (nearest) {
         // Tower fires an arrow projectile
-        spawnProjectile(cx, cy, nearest, 7, '#ffd700', def.damage, {owner:bOwner, damage:def.damage}, 0);
+        spawnProjectile(cx, cy, nearest, 7, '#ffd700', def.damage, {owner:bOwner, damage:def.damage, isHero:false}, 0);
       }
     }
   }
@@ -947,11 +949,11 @@ function updateProjectiles() {
         const aoePx = p.aoe*TS;
         for (const e of [...entities]) {
           if (!e.isUnit) continue;
-          if (e.owner===p.owner.owner) continue;
+          if (e.owner===p.sourceOwner) continue;
           if (d2(p.tx,p.ty,e.x,e.y)<aoePx) {
             if (!(e.isHero && e.skillCooldowns?.shieldActive>0)) {
-              dealDamage(p.owner, e, Math.round(p.damage*(0.5+0.5*(1-d2(p.tx,p.ty,e.x,e.y)/aoePx))));
-              if (e.hp<=0) removeEntity(e.id, p.owner);
+              dealDamage(p.attacker, e, Math.round(p.damage*(0.5+0.5*(1-d2(p.tx,p.ty,e.x,e.y)/aoePx))));
+              if (e.hp<=0) removeEntity(e.id, p.attacker);
             }
           }
         }
@@ -960,8 +962,8 @@ function updateProjectiles() {
         const tgt=getEntity(p.targetId);
         if (tgt && tgt.hp>0) {
           if (!(tgt.isHero && tgt.skillCooldowns?.shieldActive>0)) {
-            dealDamage(p.owner, tgt, p.damage);
-            if (tgt.hp<=0) removeEntity(tgt.id, p.owner);
+            dealDamage(p.attacker, tgt, p.damage);
+            if (tgt.hp<=0) removeEntity(tgt.id, p.attacker);
           }
         }
       }
@@ -2264,7 +2266,7 @@ function onMouseUp(e) {
       const wy2=Math.max(selBox.y1,selBox.y2)+camera.y;
       if (!e.shiftKey) selectedIds.clear();
       for (const en of entities)
-        if (en.isUnit&&(en.owner==='player'||en.owner==='neutral')&&en.x>=wx1&&en.x<=wx2&&en.y>=wy1&&en.y<=wy2)
+        if (en.isUnit&&en.owner==='player'&&en.x>=wx1&&en.x<=wx2&&en.y>=wy1&&en.y<=wy2)
           selectedIds.add(en.id);
     } else {
       const wx=mouse.downX+camera.x, wy=mouse.downY+camera.y;
